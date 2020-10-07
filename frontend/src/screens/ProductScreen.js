@@ -1,91 +1,118 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
-import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap'
-import Rating from '../components/Rating'
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Row, Col, Image, ListGroup, Card, Button, Form } from "react-bootstrap";
+import Rating from "../components/Rating";
+import { listProductDetails } from "../actions/productActions";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 
-const ProductScreen = ({ match }) => {
-    // here we remove the products data from the frontend & fetch it from the backend w/ axios
-    const [product, setProduct] = useState({})// an object since product is an object
+const ProductScreen = ({ history, match }) => {
+    const [qty, setQty] = useState(0)
 
-    useEffect(() => {
-        //fetching a single product
-        const fetchProduct = async () => {
-            // to get the id dynamically from the url we use match.params.id
-          const { data } = await axios.get(`/api/products/${match.params.id}`)
-    
-          setProduct(data)
-        }
-        fetchProduct()
-      }, [match])
+  const dispatch = useDispatch();
+  const productDetails = useSelector((state) => state.productDetails); //this comes from the reducer parametere
+  const { loading, error, product } = productDetails;
+  useEffect(() => {
+    dispatch(listProductDetails(match.params.id)); //to get the id from the url you use match
+  }, [dispatch, match]);
 
-    return (
-        <>
-            <Link className="btn btn-light my-3" to="/">
-                Back
-            </Link>
-            <Row>
-                <Col md={6}>
-                    <Image src={product.image} alt={product.name} fluid />
-                </Col>
-                <Col md={3}>
-                    <ListGroup variant="flush" >
-                        <ListGroup.Item>
-                            <h2>{product.name}</h2>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            <Rating value={product.rating} text={`${product.numReviews} reviews`} />
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            Price: ${product.price}
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            Description: ${product.description}
-                        </ListGroup.Item>
-                    </ListGroup>
-                </Col>
-                <Col md={3}>
-                    <Card>
-                        <ListGroup variant="flush">
-                        <ListGroup.Item>
-                            <Row>
-                                <Col>
-                                    Price: 
-                                </Col>
-                                <Col>
-                                    <strong>
-                                        ${product.price}
-                                    </strong>
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
+  const addToCartHandler = () => {
+      //we need history to actually push
 
-                        <ListGroup.Item>
-                            <Row>
-                                <Col>
-                                    Status: 
-                                </Col>
-                                <Col>
-                                    <strong>
-                                        {product.countInStock > 0 ? 'In Stock' 
-                                            : "Out of Stock"    
-                                    }
-                                    </strong>
-                                </Col>
-                            </Row>
-                        </ListGroup.Item>
-                        
-                        <ListGroup.Item>
-                            <Button className="btn-block" type="button" disabled={product.countInStock === 0}>
-                                Add to Cart
-                            </Button>
-                        </ListGroup.Item>
-                        </ListGroup>
-                    </Card>
-                </Col>
-            </Row>
-        </>
-    )
-}
+      //we add a query string to the end & set it to whatever they choose from the qty box (this'll be visible on the URL path)
+      history.push(`/cart/${match.params.id}?qty=${qty}`)//props.history.push() will just redirect to what's in the parentheses
+    // thus, when you click add to cart after choosing a qty, you'll be redirected to/cart/the product id with the qty at the end
+    }
 
-export default ProductScreen
+  return (
+    <>
+      <Link className="btn btn-light my-3" to="/">
+        Back
+      </Link>
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant="danger">{error}</Message>
+      ) : (
+        <Row>
+          <Col md={6}>
+            <Image src={product.image} alt={product.name} fluid />
+          </Col>
+          <Col md={3}>
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <h2>{product.name}</h2>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Rating
+                  value={product.rating}
+                  text={`${product.numReviews} reviews`}
+                />
+              </ListGroup.Item>
+              <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
+              <ListGroup.Item>
+                Description: ${product.description}
+              </ListGroup.Item>
+            </ListGroup>
+          </Col>
+          <Col md={3}>
+            <Card>
+              <ListGroup variant="flush">
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Price:</Col>
+                    <Col>
+                      <strong>${product.price}</strong>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Status:</Col>
+                    <Col>
+                      <strong>
+                        {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
+                      </strong>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+
+                { product.countInStock > 0 && (
+                    <ListGroup.Item>
+                        <Row>
+                            <Col>
+                                Qty: 
+                            </Col>
+                            <Col>
+                                <Form.Control as='select' value={qty} onChange={e => setQty(e.target.value)}>
+                                    {[...Array(product.countInStock).keys()].map(x => (
+                                        <option key={x + 1} value={x + 1}>{x + 1}</option>
+                                    ))}
+                                </Form.Control>
+                            </Col>
+                        </Row>
+                    </ListGroup.Item>
+                ) }
+
+                <ListGroup.Item>
+                  <Button
+                    onClick={addToCartHandler}
+                    className="btn-block"
+                    type="button"
+                    disabled={product.countInStock === 0}
+                  >
+                    Add to Cart
+                  </Button>
+                </ListGroup.Item>
+              </ListGroup>
+            </Card>
+          </Col>
+        </Row>
+      )}
+    </>
+  );
+};
+
+export default ProductScreen;
