@@ -27,3 +27,5 @@ const getProductById = asyncHandler(async (req, res) => {
 })
 
 export { getProducts, getProductById }
+
+// So a controller(s) is pretty much the function that'll get called in the route file & the route path.

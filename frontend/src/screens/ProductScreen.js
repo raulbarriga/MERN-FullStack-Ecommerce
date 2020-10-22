@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Image, ListGroup, Card, Button, Form } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Image,
+  ListGroup,
+  Card,
+  Button,
+  Form,
+} from "react-bootstrap";
 import Rating from "../components/Rating";
 import { listProductDetails } from "../actions/productActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
 const ProductScreen = ({ history, match }) => {
-    const [qty, setQty] = useState(1)//don't ever set quantity to 0
+  const [qty, setQty] = useState(1); //don't ever set quantity to 0
 
   const dispatch = useDispatch();
   const productDetails = useSelector((state) => state.productDetails); //this comes from the reducer parametere
@@ -18,12 +26,12 @@ const ProductScreen = ({ history, match }) => {
   }, [dispatch, match]);
 
   const addToCartHandler = () => {
-      //we need history to actually push
+    //we need history to actually push
 
-      //we add a query string to the end & set it to whatever they choose from the qty box (this'll be visible on the URL path)
-      history.push(`/cart/${match.params.id}?qty=${qty}`)//props.history.push() will just redirect to what's in the parentheses
+    //we add a query string to the end & set it to whatever they choose from the qty box (this'll be visible on the URL path)
+    history.push(`/cart/${match.params.id}?qty=${qty}`); //props.history.push() will just redirect to what's in the parentheses
     // thus, when you click add to cart after choosing a qty, you'll be redirected to/cart/the product id with the qty at the end
-    }
+  };
 
   return (
     <>
@@ -79,22 +87,26 @@ const ProductScreen = ({ history, match }) => {
                   </Row>
                 </ListGroup.Item>
 
-                { product.countInStock > 0 && (
-                    <ListGroup.Item>
-                        <Row>
-                            <Col>
-                                Qty: 
-                            </Col>
-                            <Col>
-                                <Form.Control as='select' value={qty} onChange={e => setQty(e.target.value)}>
-                                    {[...Array(product.countInStock).keys()].map(x => (
-                                        <option key={x + 1} value={x + 1}>{x + 1}</option>
-                                    ))}
-                                </Form.Control>
-                            </Col>
-                        </Row>
-                    </ListGroup.Item>
-                ) }
+                {product.countInStock > 0 && (
+                  <ListGroup.Item>
+                    <Row>
+                      <Col>Qty:</Col>
+                      <Col>
+                        <Form.Control
+                          as="select"
+                          value={qty}
+                          onChange={(e) => setQty(e.target.value)}
+                        >
+                          {[...Array(product.countInStock).keys()].map((x) => (
+                            <option key={x + 1} value={x + 1}>
+                              {x + 1}
+                            </option>
+                          ))}
+                        </Form.Control>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                )}
 
                 <ListGroup.Item>
                   <Button
