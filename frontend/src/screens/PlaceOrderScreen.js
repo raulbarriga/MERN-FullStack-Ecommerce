@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { createOrder } from '../actions/orderActions'
+import { ORDER_CREATE_RESET } from '../constants/orderConstants'
 
 const PlaceOrderScreen = ({ history }) => {
   const dispatch = useDispatch()
@@ -43,6 +44,7 @@ const PlaceOrderScreen = ({ history }) => {
     if(success) {
       // this id comes from the order variable that was destructured above from orderCreate
       history.push(`/order/${order._id}`)//this doesn't exists yet until it's created in the order screen
+      dispatch({ type: ORDER_CREATE_RESET })
     }
     // eslint-disable-next-line
   }, [history, success])

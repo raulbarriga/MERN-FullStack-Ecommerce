@@ -6,6 +6,7 @@ import {
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
+  USERS_LIST_RESET,
   USER_LOGOUT,
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
@@ -13,9 +14,18 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
-  USER_DETAILS_RESET, USERS_LIST_FAIL, USERS_LIST_SUCCESS, USERS_LIST_REQUEST
+  USER_DETAILS_RESET,
+  USERS_LIST_FAIL,
+  USERS_LIST_SUCCESS,
+  USERS_LIST_REQUEST,
+  USER_DELETE_REQUEST,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_FAIL,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
 } from "../constants/userConstants";
-import { MY_ORDERS_LIST_RESET } from '../constants/orderConstants'
+import { MY_ORDERS_LIST_RESET } from "../constants/orderConstants";
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -58,10 +68,15 @@ export const logout = () => (dispatch) => {
   // we want to do 2 things:
   // 1) remove it from local storage
   localStorage.removeItem("userInfo");
+  localStorage.removeItem("cartItems");
+  localStorage.removeItem("shippingAddress");
+  localStorage.removeItem("paymentMethod");
   // 2) dispatch user log out w/ its constant action
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: MY_ORDERS_LIST_RESET });
+  dispatch({ type: USERS_LIST_RESET });
+  document.location.href = "/login";
 };
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -149,7 +164,8 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     } = getState();
 
     const config = {
-      headers: {//we add our token to the header
+      headers: {
+        //we add our token to the header
         "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
@@ -161,6 +177,11 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
       type: USER_UPDATE_PROFILE_SUCCESS,
       payload: data,
     });
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: data,
+    });
+    localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
@@ -181,7 +202,8 @@ export const listUsers = () => async (dispatch, getState) => {
     } = getState();
 
     const config = {
-      headers: {//we add our token to the header
+      headers: {
+        //we add our token to the header
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
@@ -195,6 +217,76 @@ export const listUsers = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USERS_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+//we know to pass in the id since that's what we set in the userController where we use the findById method
+export const deleteUser = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_DELETE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        //we add our token to the header
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    await axios.delete(`/api/users/${id}`, config);
+
+    dispatch({
+      type: USER_DELETE_SUCCESS,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+//to edit the user by the admin
+export const updateUser = (user) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_UPDATE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        //we add our token to the header
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    //from the whole user object, we just get the ._id
+    const { data } =  await axios.put(`/api/users/${user._id}`, user, config);
+
+    dispatch({
+      type: USER_UPDATE_SUCCESS,
+    });
+    dispatch({
+      type: USER_DETAILS_SUCCESS, payload: data
+    });
+
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

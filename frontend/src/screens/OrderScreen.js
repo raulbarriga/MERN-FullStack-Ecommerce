@@ -1,24 +1,38 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios'
-import { PayPalButton } from 'react-paypal-button-v2'
+import axios from "axios";
+import { PayPalButton } from "react-paypal-button-v2";
 import { Link } from "react-router-dom";
-import { Row, Col, ListGroup, Image, Card } from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { getOrderDetails, payOrder } from "../actions/orderActions";
-import { ORDER_PAY_RESET } from '../constants/orderConstants'
+import {
+  getOrderDetails,
+  payOrder,
+  deliverOrder,
+} from "../actions/orderActions";
+import {
+  ORDER_PAY_RESET,
+  ORDER_DELIVER_RESET,
+} from "../constants/orderConstants";
 
-const OrderScreen = ({ match }) => {
+const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id;
-  const [sdkReady, setSdkReady] = useState(false)
+
+  const [sdkReady, setSdkReady] = useState(false);
   const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo} = userLogin;
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
-  const orderPay = useSelector((state) => state.orderPay);//we get this destructured stuff from the orderReducer
-  const { loading: loadingPay, success: successPay } = orderPay;//we rename loading & success
+  const orderPay = useSelector((state) => state.orderPay); //we get this destructured stuff from the orderReducer
+  const { loading: loadingPay, success: successPay } = orderPay; //we rename loading & success
+
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
 
   if (!loading) {
     const addDecimals = (num) => {
@@ -33,47 +47,58 @@ const OrderScreen = ({ match }) => {
   }
 
   useEffect(() => {
+    //before we do anything, we just make sure we're logged in:
+    if(!userInfo){
+      history.push('/login')
+    }
     //here we dynamically add the PayPal script to the body
     const addPayPalScript = async () => {
       //fetching the client id from the backend .env file
-      const { data: clientId } = await axios.get('/api/config/paypal')
+      const { data: clientId } = await axios.get("/api/config/paypal");
       //this is just vanilla JavaScript
-      const script = document.createElement('script')
-      script.type = 'text/javascript'
+      const script = document.createElement("script");
+      script.type = "text/javascript";
       //this comes from the developer.paypal website
-      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
-      script.async = true
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+      script.async = true;
       //we're gonna have a piece of state for when the sdk that paypal'll give us is ready
       script.onload = () => {
-        setSdkReady(true)//this tells us if the script has been loaded
-      }
+        setSdkReady(true); //this tells us if the script has been loaded
+      };
       //here we add the script to the body
-      document.body.appendChild(script)
-    }
+      document.body.appendChild(script);
+    };
 
-    if(!order || order._id !== orderId || successPay) {
-
+    if (!order || order._id !== orderId || successPay || successDeliver) {
       //we can just dispatch here as well (not in the actions file)
       //if we don't reset once you pay, it's just gonna keep refreshing in a loop
-      dispatch({ type: ORDER_PAY_RESET })
-      dispatch(getOrderDetails(orderId))//if successPay is true, it'll load the this dispatch again but now it should be paid
-    } else if (!order.isPaid) {//if it's not paid, then we call the paypal script w/ addPayPalScript()
-      if(!window.paypal) {//also checking if the paypal script is there & added to the document.body
-        addPayPalScript()
+      dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
+
+      //***this if block is to basically just reset the screen***
+      dispatch(getOrderDetails(orderId)); //if successPay is true, it'll load the this dispatch again but now it should be paid
+    } else if (!order.isPaid) {
+      //if it's not paid, then we call the paypal script w/ addPayPalScript()
+      if (!window.paypal) {
+        //also checking if the paypal script is there & added to the document.body
+        addPayPalScript();
       } else {
-        setSdkReady(true)
+        setSdkReady(true);
       }
     }
+  }, [dispatch, history, userInfo, order, orderId, successPay, successDeliver]);
 
-}, [dispatch, order, orderId, successPay])
+  //from paypal, this handler takes in a paymentResult
+  const successPaymentHandler = (paymentResult) => {
+    //this is where we want to call the payorder action that we created
+    console.log(paymentResult);
+    dispatch(payOrder(orderId, paymentResult)); //once we pay it, it'll update the database to paid
+    //then in the useEffect, after it's paid, successPay should be true & it should dispatch orderDetails to update to paid
+  };
 
-//from paypal, this handler takes in a paymentResult
-const successPaymentHandler = (paymentResult) => {
-  //this is where we want to call the payorder action that we created
-  console.log(paymentResult)
-  dispatch(payOrder(orderId, paymentResult))//once we pay it, it'll update the database to paid
-  //then in the useEffect, after it's paid, successPay should be true & it should dispatch orderDetails to update to paid
-}
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order));
+  };
 
   return loading ? (
     <Loader />
@@ -102,12 +127,13 @@ const successPaymentHandler = (paymentResult) => {
                 {order.shippingAddress.postalCode},{" "}
                 {order.shippingAddress.country}
               </p>
-              { order.isDelivered ? (
-                <Message variant="success">Delivered on {order.deliveredAt}</Message>
+              {order.isDelivered ? (
+                <Message variant="success">
+                  Delivered on {order.deliveredAt}
+                </Message>
               ) : (
                 <Message variant="danger">Not Delivered</Message>
-              ) }
-
+              )}
             </ListGroup.Item>
             <ListGroup.Item>
               <h2>Payment Method</h2>
@@ -191,17 +217,33 @@ const successPaymentHandler = (paymentResult) => {
                 </Row>
               </ListGroup.Item>
               {/* Checking to see if the order isn't paid yet */}
-              { !order.isPaid && (
+              {!order.isPaid && (
                 <ListGroup.Item>
                   {/* Check if it's loading */}
-                  { loadingPay && <Loader /> }
+                  {loadingPay && <Loader />}
                   {/* Show a Loader if sdk isn't ready */}
-                  { !sdkReady ? <Loader /> : (
+                  {!sdkReady ? (
+                    <Loader />
+                  ) : (
                     // if the sdk is readey then we show the PayPal button, it takes 2 attributes, amount & onSuccess handler
-                    <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler} />
-                  ) }
+                    <PayPalButton
+                      amount={order.totalPrice}
+                      onSuccess={successPaymentHandler}
+                    />
+                  )}
                 </ListGroup.Item>
-              ) }
+              )}
+              {loadingDeliver && <Loader />}
+              {/* !order.isDelivered checks if it's not delivered */}
+              {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                <ListGroup.Item>
+                  <Button
+                    type='button'
+                    className="btn btn-block"
+                    onClick={deliverHandler}
+                  >Mark As Delivered</Button>
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Card>
         </Col>

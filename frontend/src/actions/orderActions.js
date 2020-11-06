@@ -1,4 +1,5 @@
 import axios from "axios";
+import { CART_RESET } from "../constants/cartConstants";
 import {
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
@@ -12,6 +13,12 @@ import {
   MY_ORDERS_LIST_FAIL,
   MY_ORDERS_LIST_SUCCESS,
   MY_ORDERS_LIST_REQUEST,
+  ORDERS_LIST_REQUEST,
+  ORDERS_LIST_SUCCESS,
+  ORDERS_LIST_FAIL,
+  ORDER_DELIVER_FAIL,
+  ORDER_DELIVER_SUCCESS,
+  ORDER_DELIVER_REQUEST
 } from "../constants/orderConstants";
 import { logout } from "./userActions";
 
@@ -37,6 +44,11 @@ export const createOrder = (order) => async (dispatch, getState) => {
       type: ORDER_CREATE_SUCCESS,
       payload: data, //this 'data' is the newly created order
     });
+    dispatch({
+      type: CART_RESET,
+      payload: data,
+    });
+    localStorage.removeItem("cartItems");
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -138,6 +150,46 @@ export const payOrder = (orderId, paymentResult) => async (
   }
 };
 
+export const deliverOrder = (order) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: ORDER_DELIVER_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        //We don't need 'content-type, 'JSON.
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    //we don't pass the order in b/c the order's already there, we're just updating w/ the put request
+    //we're setting the paymentResult object, setting isPaid to true & finally setting the paidAt date
+    const { data } = await axios.put(
+      `/api/orders/${order._id}/deliver`,
+      {},
+      config
+    );
+
+    dispatch({
+      type: ORDER_DELIVER_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ORDER_DELIVER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
 export const myOrdersListAction = () => async (dispatch, getState) => {
   try {
     dispatch({
@@ -158,11 +210,44 @@ export const myOrdersListAction = () => async (dispatch, getState) => {
 
     dispatch({
       type: MY_ORDERS_LIST_SUCCESS,
-      payload: data,//this data is the data for the particular user's orders
+      payload: data, //this data is the data for the particular user's orders
     });
   } catch (error) {
     dispatch({
       type: MY_ORDERS_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const ordersListAction = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: ORDERS_LIST_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/orders`, config);
+
+    dispatch({
+      type: ORDERS_LIST_SUCCESS,
+      payload: data, //this data is the data for the particular user's orders
+    });
+  } catch (error) {
+    dispatch({
+      type: ORDERS_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

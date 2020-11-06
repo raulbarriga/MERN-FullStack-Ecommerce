@@ -7,6 +7,11 @@ const reviewSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    user: {//we add user here to associate a user to a review b/c we want to implement checking that if the user already added a review so we don't duplicate a review
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
     rating: {
         type: Number,
         required: true

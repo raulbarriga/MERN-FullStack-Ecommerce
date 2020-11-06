@@ -6,6 +6,7 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { getUserDetails, updateUserProfile } from "../actions/userActions";
 import { myOrdersListAction } from "../actions/orderActions";
+import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants'
 
 const ProfileScreen = ({ location, history }) => {
   //component level state for the form, w/ an empty string as default
@@ -35,7 +36,8 @@ const ProfileScreen = ({ location, history }) => {
       //if not logged in, then redirect to '/login'
       history.push("/login");
     } else {
-      if (!user.name) {
+      if (!user || !user.name || success) {
+        dispatch({ type: USER_UPDATE_PROFILE_RESET })
         //we check for the name
         dispatch(getUserDetails("profile")); //takes in an id, but in this case we pass 'profile' for the userAction path which'll redirect to /profile & not /anID
         dispatch(myOrdersListAction()); //display all orders
@@ -45,7 +47,7 @@ const ProfileScreen = ({ location, history }) => {
         setEmail(user.email);
       }
     }
-  }, [dispatch, history, userInfo, user]);
+  }, [dispatch, history, userInfo, user, success]);
 
   const submitHandler = (e) => {
     e.preventDefault();

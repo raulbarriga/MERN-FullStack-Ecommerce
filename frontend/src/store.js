@@ -3,38 +3,55 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import {
   productDetailsReducer,
-  productListReducer,
+  productsListReducer,
+  productDeleteReducer,
+  productCreateReducer,
+  productUpdateReducer,
+  productCreateReviewReducer,
+  productTopRatedReducer,
 } from "./reducers/productReducers";
 import {
   userLoginReducer,
   userRegisterReducer,
   userDetailsReducer,
   userUpdateProfileReducer,
-  usersListReducer
+  usersListReducer,
+  userDeleteReducer,
+  userUpdateReducer,
 } from "./reducers/userReducers";
 import { cartReducer } from "./reducers/cartReducers";
 import {
   orderCreateReducer,
   orderDetailsReducer,
   orderPayReducer,
+  orderDeliverReducer,
   myOrdersListReducer,
+  ordersListReducer,
 } from "./reducers/orderReducers";
 
 const reducer = combineReducers({
   //whatever I called it in the state from the reducer, I just call it the same in the reduers here,
-  productList: productListReducer,
+  productsList: productsListReducer,
   productDetails: productDetailsReducer,
+  productDelete: productDeleteReducer,
+  productCreate: productCreateReducer,
+  productUpdate: productUpdateReducer,
+  productCreateReview: productCreateReviewReducer,
+  productTopRated: productTopRatedReducer,
   cart: cartReducer,
   userLogin: userLoginReducer, //after we add the reducer to the store we movew to the actions folder
   userRegister: userRegisterReducer, //we don't do anything here for this reducer & we then move to the next redux step, the action creator file
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
   usersList: usersListReducer,
+  userDelete: userDeleteReducer,
+  userUpdate: userUpdateReducer, // to edit by the admin of a user's info
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
   myOrdersList: myOrdersListReducer,
-
+  ordersList: ordersListReducer,
+  orderDeliver: orderDeliverReducer,
 }); //having different reducers helps debug
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
