@@ -22,6 +22,7 @@ import {
   PRODUCT_TOP_SUCCESS,
   PRODUCT_TOP_REQUEST,
 } from "../constants/productConstants";
+import { logout } from './userActions'
 //think of these as action creators & the constants as actions
 //what we did w/ useEffect before to fetch, we now do here
 
