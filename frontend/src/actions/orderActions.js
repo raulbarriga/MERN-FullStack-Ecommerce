@@ -18,7 +18,7 @@ import {
   ORDERS_LIST_FAIL,
   ORDER_DELIVER_FAIL,
   ORDER_DELIVER_SUCCESS,
-  ORDER_DELIVER_REQUEST
+  ORDER_DELIVER_REQUEST,
 } from "../constants/orderConstants";
 import { logout } from "./userActions";
 

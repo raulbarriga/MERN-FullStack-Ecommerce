@@ -178,7 +178,7 @@ export const productTopRatedReducer = (state = { products: [] }, action) => {
     case PRODUCT_TOP_REQUEST:
       return {
         loading: true,
-        products: []
+        products: [],
       };
     case PRODUCT_TOP_SUCCESS:
       return {

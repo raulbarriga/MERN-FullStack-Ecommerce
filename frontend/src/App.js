@@ -36,10 +36,21 @@ const App = () => {
           {/* we make the id optional by adding a ? after it */}
           <Route path="/cart/:id?" component={CartScreen} />
           <Route path="/admin/userslist" component={UsersListScreen} />
-          <Route path="/admin/productslist" component={ProductsListScreen} exact />
-          <Route path="/admin/productslist/:pageNumber" component={ProductsListScreen} exact />
+          <Route
+            path="/admin/productslist"
+            component={ProductsListScreen}
+            exact
+          />
+          <Route
+            path="/admin/productslist/:pageNumber"
+            component={ProductsListScreen}
+            exact
+          />
           <Route path="/admin/orderslist" component={OrdersListScreen} />
-          <Route path="/admin/products/:id/edit" component={ProductEditScreen} />
+          <Route
+            path="/admin/products/:id/edit"
+            component={ProductEditScreen}
+          />
           <Route path="/admin/user/:id/edit" component={UserEditScreen} />
           {/* :keyword means this is just a placeholder for whatever that keyword is (we also do that for :id for whatever that id is) */}
           <Route path="/search/:keyword" component={HomeScreen} exact />

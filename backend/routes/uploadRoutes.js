@@ -24,12 +24,12 @@ function checkFileType(file, cb) {
   const filetypes = /jpg|jpeg|png/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase()); //we're gonna text if the path.extname (the uploaded file's extension) passes the above filetypes expression variable
   //we also check the mime type (every file has this, e.g. a jpeg is image/jpeg)
-  const mimetype = filetypes.test(file.mimetype)//it has to have one of the extensions in the filetypes variable expression above
+  const mimetype = filetypes.test(file.mimetype); //it has to have one of the extensions in the filetypes variable expression above
 
-  if(extname && mimetype) {
-      return cb(null, true)
+  if (extname && mimetype) {
+    return cb(null, true);
   } else {
-      cb('Images only')//this is an error that we pass
+    cb("Images only"); //this is an error that we pass
   }
 }
 
@@ -44,8 +44,8 @@ const upload = multer({
 //The above code is the config, below we create the route
 //we just use '/' here b/c this uploadRoutes file's gonna be connected to /api/upload
 //if the frontend, remember to call 'image' that we pass here inside .single('image')
-router.post('/' , upload.single('image'), (req, res) => {
-    res.send(`/${req.file.path}`)//all we send back is the path
-})//we pass upload as middleware, & on it we can do multiple images if we wanted to, but we're just gonna do 1 image w/ .single()
+router.post("/", upload.single("image"), (req, res) => {
+  res.send(`/${req.file.path}`); //all we send back is the path
+}); //we pass upload as middleware, & on it we can do multiple images if we wanted to, but we're just gonna do 1 image w/ .single()
 
 export default router;

@@ -10,7 +10,7 @@ const UsersListScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const usersList = useSelector((state) => state.usersList); //this comes from the store.js file
-  const { loading, error, users} = usersList;
+  const { loading, error, users } = usersList;
 
   //this and the if statement in useEffect will be used to redirect if we don't have to proper credentials
   const userLogin = useSelector((state) => state.userLogin); //this comes from the store.js file
@@ -18,7 +18,7 @@ const UsersListScreen = ({ history }) => {
 
   const userDelete = useSelector((state) => state.userDelete);
   const { success: successDelete } = userDelete;
-                                                           
+
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listUsers());
@@ -30,10 +30,10 @@ const UsersListScreen = ({ history }) => {
   }, [dispatch, history, userInfo, successDelete]);
 
   const deleteHandler = (id) => {
-    if(window.confirm("Are you sure you?")){
-        dispatch(deleteUser(id))
+    if (window.confirm("Are you sure you?")) {
+      dispatch(deleteUser(id));
     }
-    }
+  };
 
   return (
     <>

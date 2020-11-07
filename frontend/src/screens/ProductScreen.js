@@ -84,10 +84,10 @@ const ProductScreen = ({ history, match }) => {
         <>
           <Meta title={product.name} />
           <Row>
-            <Col md={6} className='product-page-section'>
+            <Col md={6} className="product-page-section">
               <Image src={product.image} alt={product.name} fluid />
             </Col>
-            <Col md={3} className='product-page-section'>
+            <Col md={3} className="product-page-section">
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   <h2>{product.name}</h2>
@@ -104,7 +104,7 @@ const ProductScreen = ({ history, match }) => {
                 </ListGroup.Item>
               </ListGroup>
             </Col>
-            <Col md={3} className='product-page-section'>
+            <Col md={3} className="product-page-section">
               <Card>
                 <ListGroup variant="flush">
                   <ListGroup.Item>
@@ -167,7 +167,7 @@ const ProductScreen = ({ history, match }) => {
             </Col>
           </Row>
           <Row>
-            <Col md={6} className='product-page-section'>
+            <Col md={6} className="product-page-section">
               <h2>Reviews</h2>
               {product.reviews.length === 0 && <Message>No Reviews</Message>}
               <ListGroup variant="flush">

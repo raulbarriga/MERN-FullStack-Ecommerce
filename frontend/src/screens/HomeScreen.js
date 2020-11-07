@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 // useDispatch is used to dispatch or call an action
 // useSelector is used to select parts of the state, in this case the product list out of the state
 import { Col, Row } from "react-bootstrap";
@@ -33,7 +33,13 @@ const HomeScreen = ({ match }) => {
   return (
     <>
       <Meta />
-      {!keyword ? <ProductCarousel /> : <Link to='/' className='btn btn-light'>Back</Link>}
+      {!keyword ? (
+        <ProductCarousel />
+      ) : (
+        <Link to="/" className="btn btn-light">
+          Back
+        </Link>
+      )}
       <h1>Latest Products</h1>
       {loading ? (
         <Loader />

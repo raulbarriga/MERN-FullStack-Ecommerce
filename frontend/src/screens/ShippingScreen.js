@@ -3,26 +3,25 @@ import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import CheckoutSteps from "../components/CheckoutSteps";
-import { saveShippingAddress } from '../actions/cartActions'
+import { saveShippingAddress } from "../actions/cartActions";
 
 const ShippingScreen = ({ history }) => {
-
-    const cart = useSelector(state => state.cart)
-    const { shippingAddress } = cart
+  const cart = useSelector((state) => state.cart);
+  const { shippingAddress } = cart;
   //w/ history, when we submit the form, we're gonna want to push to our payment screen
-  const [address, setAddress] = useState(shippingAddress.address);//if it's in local storage, it'll pull it out from there & fill these fields in here
+  const [address, setAddress] = useState(shippingAddress.address); //if it's in local storage, it'll pull it out from there & fill these fields in here
   const [city, setCity] = useState(shippingAddress.city);
   const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
   const [country, setCountry] = useState(shippingAddress.country);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const submitHandler = (e) => {
-    e.preventDefault()
-    dispatch(saveShippingAddress({ address, city, postalCode, country }))//this'll be the data payload
-    history.push('/payment')//after the dispatch, we're gonna redirect/push to the oayment screen where we select our payment method
-  }
-  
+    e.preventDefault();
+    dispatch(saveShippingAddress({ address, city, postalCode, country })); //this'll be the data payload
+    history.push("/payment"); //after the dispatch, we're gonna redirect/push to the oayment screen where we select our payment method
+  };
+
   return (
     <FormContainer>
       {/* we pass in the step we're on (the shipping screen step #2) & the step(s) before that */}
@@ -69,7 +68,7 @@ const ShippingScreen = ({ history }) => {
             onChange={(e) => setCountry(e.target.value)}
           ></Form.Control>
         </Form.Group>
-        <Button type="submit" variant='primary'>
+        <Button type="submit" variant="primary">
           Continue
         </Button>
       </Form>

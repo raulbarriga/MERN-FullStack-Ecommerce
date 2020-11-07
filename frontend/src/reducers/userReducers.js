@@ -19,7 +19,11 @@ import {
   USERS_LIST_RESET,
   USER_DELETE_FAIL,
   USER_DELETE_SUCCESS,
-  USER_DELETE_REQUEST, USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_RESET
+  USER_DELETE_REQUEST,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
+  USER_UPDATE_RESET,
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -115,8 +119,8 @@ export const userUpdateProfileReducer = (state = {}, action) => {
         loading: false,
         error: action.payload,
       };
-    // case USER_UPDATE_PROFILE_RESET:
-    //   return {};
+    case USER_UPDATE_PROFILE_RESET:
+      return {};
     default:
       return state;
   }
@@ -190,7 +194,7 @@ export const userUpdateReducer = (state = { user: {} }, action) => {
       };
     case USER_UPDATE_RESET:
       return {
-        user: {}
+        user: {},
       };
     default:
       return state;

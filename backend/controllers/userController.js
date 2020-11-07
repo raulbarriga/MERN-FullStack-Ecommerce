@@ -172,7 +172,8 @@ const updateUser = asyncHandler(async (req, res) => {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     //We won't be able to change the user's password though
-    user.isAdmin = req.body.isAdmin === undefined ? user.isAdmin : req.body.isAdmin;// this code came from the Q&A section of the udemy course from a response by Bassir to a question.
+    user.isAdmin =
+      req.body.isAdmin === undefined ? user.isAdmin : req.body.isAdmin; // this code came from the Q&A section of the udemy course from a response by Bassir to a question.
 
     const updatedUser = await user.save(); //we save the user's info
     res.json({

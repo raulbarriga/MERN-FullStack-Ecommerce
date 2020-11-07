@@ -4,11 +4,11 @@ import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import CheckoutSteps from "../components/CheckoutSteps";
-import { createOrder } from '../actions/orderActions'
-import { ORDER_CREATE_RESET } from '../constants/orderConstants'
+import { createOrder } from "../actions/orderActions";
+import { ORDER_CREATE_RESET } from "../constants/orderConstants";
 
 const PlaceOrderScreen = ({ history }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   // this function'll show 2 decimal places (even if it's $0, it'll be $0.00) & we'll use it to wrap the money amounts
   const addDecimals = (num) => {
@@ -37,28 +37,31 @@ const PlaceOrderScreen = ({ history }) => {
     Number(cart.taxPrice)
   ).toFixed(2);
 
-  const orderCreate = useSelector(state => state.orderCreate)//we get the orderCreate from the state
-  const { order, success, error } = orderCreate // we get this from orderCreate
+  const orderCreate = useSelector((state) => state.orderCreate); //we get the orderCreate from the state
+  const { order, success, error } = orderCreate; // we get this from orderCreate
 
   useEffect(() => {
-    if(success) {
+    if (success) {
       // this id comes from the order variable that was destructured above from orderCreate
-      history.push(`/order/${order._id}`)//this doesn't exists yet until it's created in the order screen
-      dispatch({ type: ORDER_CREATE_RESET })
+      history.push(`/order/${order._id}`); //this doesn't exists yet until it's created in the order screen
+      dispatch({ type: ORDER_CREATE_RESET });
     }
     // eslint-disable-next-line
-  }, [history, success])
+  }, [history, success]);
 
   const placeOrderHandler = () => {
-    dispatch(createOrder({//all this'll come from our cart
-      orderItems: cart.cartItems,
-      shippingAddress: cart.shippingAddress,
-      paymentMethod: cart.paymentMethod,
-      itemsPrice: cart.itemsPrice,
-      shippingPrice: cart.shippingPrice,
-      taxPrice: cart.taxPrice,
-      totalPrice: cart.totalPrice
-    }));//once we dispatch createOrder, it's gonna send everything down to the state so we have to grab it from the state w/ useSelector
+    dispatch(
+      createOrder({
+        //all this'll come from our cart
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
+      })
+    ); //once we dispatch createOrder, it's gonna send everything down to the state so we have to grab it from the state w/ useSelector
   };
 
   return (
@@ -151,7 +154,7 @@ const PlaceOrderScreen = ({ history }) => {
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
-                { error && <Message variant='danger'>{error}</Message> }
+                {error && <Message variant="danger">{error}</Message>}
               </ListGroup.Item>
               <ListGroup.Item>
                 <Button

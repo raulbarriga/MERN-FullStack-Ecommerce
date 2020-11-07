@@ -47,7 +47,7 @@ const UserEditScreen = ({ match, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(updateUser({ _id: userId, name, email, isAdmin }));// here we rename the_id
+    dispatch(updateUser({ _id: userId, name, email, isAdmin })); // here we rename the_id
   };
 
   return (

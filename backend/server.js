@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/build")));
   app.get("*", (req, res) => {
     //res.sendFile transfers the file to the given path so first __dirname, then 'frontend', then 'build', & finally 'index.html'
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
   });
 } else {
   app.get("/", (req, res) => {

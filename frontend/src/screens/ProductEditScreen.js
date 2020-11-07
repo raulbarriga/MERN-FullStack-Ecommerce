@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +19,7 @@ const ProductEditScreen = ({ match, history }) => {
   const [category, setCategory] = useState("");
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
-  const [uploading, setUploading] = useState(false)
+  const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -56,41 +56,43 @@ const ProductEditScreen = ({ match, history }) => {
   }, [dispatch, history, productId, product, successUpdate]);
 
   const uploadFileHandler = async (e) => {
-    const file = e.target.files[0]//this'll be an array, since we're only uploading a single file it'll be the frist one [0]
-    const formData = new FormData()
-    formData.append('image', file)//here we call 'image' just like we did in the backend on the uploadRoutes file
-    setUploading(true)// this is for the spinner Loader
+    const file = e.target.files[0]; //this'll be an array, since we're only uploading a single file it'll be the frist one [0]
+    const formData = new FormData();
+    formData.append("image", file); //here we call 'image' just like we did in the backend on the uploadRoutes file
+    setUploading(true); // this is for the spinner Loader
 
     try {
       const config = {
         headers: {
-          'Content-Type': 'multipart/form-data',// ***when you upload an image it has to have the Content-Type of this***
+          "Content-Type": "multipart/form-data", // ***when you upload an image it has to have the Content-Type of this***
         },
-      }
+      };
 
-      const { data } = await axios.post('/api/upload', formData, config)
+      const { data } = await axios.post("/api/upload", formData, config);
 
-      setImage(data)// what we send back as this data variable is the path
-      setUploading(false)// we set this back to false
+      setImage(data); // what we send back as this data variable is the path
+      setUploading(false); // we set this back to false
     } catch (error) {
-      console.error(error)
-      setUploading(false)// we set this back to false so we don't have a neverending spinner lol
+      console.error(error);
+      setUploading(false); // we set this back to false so we don't have a neverending spinner lol
     }
-  }
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
     // update product
-    dispatch(updateProduct({
-        _id: productId,//coming from the url
-        name,//all from the component state
+    dispatch(
+      updateProduct({
+        _id: productId, //coming from the url
+        name, //all from the component state
         price,
         image,
         brand,
         category,
         description,
         countInStock,
-    }));
+      })
+    );
   };
 
   return (
@@ -135,8 +137,8 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setImage(e.target.value)}
               ></Form.Control>
               <Form.File
-                id='image-file'
-                label='Choose File'
+                id="image-file"
+                label="Choose File"
                 custom
                 onChange={uploadFileHandler}
               ></Form.File>

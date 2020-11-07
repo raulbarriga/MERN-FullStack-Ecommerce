@@ -275,15 +275,15 @@ export const updateUser = (user) => async (dispatch, getState) => {
     };
 
     //from the whole user object, we just get the ._id
-    const { data } =  await axios.put(`/api/users/${user._id}`, user, config);
+    const { data } = await axios.put(`/api/users/${user._id}`, user, config);
 
     dispatch({
       type: USER_UPDATE_SUCCESS,
     });
     dispatch({
-      type: USER_DETAILS_SUCCESS, payload: data
+      type: USER_DETAILS_SUCCESS,
+      payload: data,
     });
-
   } catch (error) {
     dispatch({
       type: USER_UPDATE_FAIL,

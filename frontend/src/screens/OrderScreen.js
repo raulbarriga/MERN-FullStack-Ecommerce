@@ -23,7 +23,7 @@ const OrderScreen = ({ match, history }) => {
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo} = userLogin;
+  const { userInfo } = userLogin;
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
@@ -48,8 +48,8 @@ const OrderScreen = ({ match, history }) => {
 
   useEffect(() => {
     //before we do anything, we just make sure we're logged in:
-    if(!userInfo){
-      history.push('/login')
+    if (!userInfo) {
+      history.push("/login");
     }
     //here we dynamically add the PayPal script to the body
     const addPayPalScript = async () => {
@@ -235,15 +235,20 @@ const OrderScreen = ({ match, history }) => {
               )}
               {loadingDeliver && <Loader />}
               {/* !order.isDelivered checks if it's not delivered */}
-              {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
-                <ListGroup.Item>
-                  <Button
-                    type='button'
-                    className="btn btn-block"
-                    onClick={deliverHandler}
-                  >Mark As Delivered</Button>
-                </ListGroup.Item>
-              )}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliverHandler}
+                    >
+                      Mark As Delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>

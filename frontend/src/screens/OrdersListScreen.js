@@ -11,12 +11,12 @@ const OrdersListScreen = ({ history }) => {
 
   //this'll have the same name as the property name in the store.js file in combine reducers
   const ordersList = useSelector((state) => state.ordersList); //this comes from the store.js file
-  const { loading, error, orders} = ordersList;
+  const { loading, error, orders } = ordersList;
 
   //this and the if statement in useEffect will be used to redirect if we don't have to proper credentials
   const userLogin = useSelector((state) => state.userLogin); //this comes from the store.js file
   const { userInfo } = userLogin;
-                                                           
+
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(ordersListAction());
@@ -48,7 +48,9 @@ const OrdersListScreen = ({ history }) => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (//these orders comes from the state
+            {orders.map((
+              order //these orders comes from the state
+            ) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
                 {/* If the order.user exists, then show the order.user.name */}

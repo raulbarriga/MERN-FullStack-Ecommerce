@@ -3,7 +3,7 @@ import {
   CART_ADD_ITEM,
   CART_REMOVE_ITEM,
   CART_SAVE_SHIPPING_ADDRESS,
-  CART_SAVE_PAYMENT_METHOD
+  CART_SAVE_PAYMENT_METHOD,
 } from "../constants/cartConstants";
 
 //getState'll let us get anything we want from the combineReducers in the store w/ a dot
@@ -48,10 +48,10 @@ export const saveShippingAddress = (data) => (dispatch) => {
 
 // 'data' will be the payment method
 export const savePaymentMethod = (data) => (dispatch) => {
-    dispatch({
-      type: CART_SAVE_PAYMENT_METHOD,
-      payload: data,
-    });
-  
-    localStorage.setItem("paymentMethod", JSON.stringify(data));
-  };
+  dispatch({
+    type: CART_SAVE_PAYMENT_METHOD,
+    payload: data,
+  });
+
+  localStorage.setItem("paymentMethod", JSON.stringify(data));
+};

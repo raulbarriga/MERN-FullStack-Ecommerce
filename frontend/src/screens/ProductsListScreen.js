@@ -13,7 +13,7 @@ import {
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 
 const ProductsListScreen = ({ history, match }) => {
-  const pageNumber = match.params.pageNumber || 1
+  const pageNumber = match.params.pageNumber || 1;
   const dispatch = useDispatch();
 
   const productsList = useSelector((state) => state.productsList);
@@ -42,12 +42,12 @@ const ProductsListScreen = ({ history, match }) => {
     dispatch({ type: PRODUCT_CREATE_RESET });
     if (!userInfo || !userInfo.isAdmin) {
       //check if we're an admin
-      history.push('/login')
+      history.push("/login");
     }
     if (successCreate) {
       history.push(`/admin/product/${createdProduct._id}/edit`);
     } else {
-      dispatch(listProducts('', pageNumber));//the '' is for the keyword default state
+      dispatch(listProducts("", pageNumber)); //the '' is for the keyword default state
     }
     //so if we're not an admin & try to go to an admin only page, then we'll get redirected & won't be able to access it via an admin url
   }, [
@@ -57,7 +57,7 @@ const ProductsListScreen = ({ history, match }) => {
     successDelete,
     successCreate,
     createdProduct,
-    pageNumber
+    pageNumber,
   ]); // when a product is succefully deleted, it'll list the products again w/ the useEffect
 
   const deleteHandler = (id) => {
@@ -68,7 +68,7 @@ const ProductsListScreen = ({ history, match }) => {
 
   const createProductHandler = () => {
     // create prroduct
-    dispatch(createProduct())
+    dispatch(createProduct());
   };
 
   return (
