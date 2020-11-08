@@ -157,8 +157,8 @@ const OrderScreen = ({ match, history }) => {
               {order.orderItems.length === 0 ? (
                 <Message>Your cart is empty</Message>
               ) : (
-                // here we place all our cart items
                 <ListGroup variant="flush">
+                  {/* here we place all our cart items */}
                   {order.orderItems.map((item, index) => (
                     <ListGroup.Item key={index}>
                       <Row>
@@ -225,8 +225,7 @@ const OrderScreen = ({ match, history }) => {
                   {!sdkReady ? (
                     <Loader />
                   ) : (
-                    // if the sdk is readey then we show the PayPal button, it takes 2 attributes, amount & onSuccess handler
-                    <PayPalButton
+                    <PayPalButton // if the sdk is readey then we show the PayPal button, it takes 2 attributes, amount & onSuccess handler
                       amount={order.totalPrice}
                       onSuccess={successPaymentHandler}
                     />
