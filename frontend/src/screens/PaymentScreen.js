@@ -50,6 +50,7 @@ const PaymentScreen = ({ history }) => {
                 value="Stripe"
                 onChange={(e) => setPaymentMethod(e.target.value)}//this would be triggered from the dispatch setPaymentMethod action onChange is triggered
             ></Form.Check> */}
+            {/* comment */}
           </Col>
         </Form.Group>
         <Button type="submit" variant="primary">
