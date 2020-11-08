@@ -40,6 +40,16 @@ const PaymentScreen = ({ history }) => {
               checked
               onChange={(e) => setPaymentMethod(e.target.value)}
             ></Form.Check>
+            {/* If/when we add a payment method below, it'd be just like this: */}
+            {/* <Form.Check
+                type="radio"
+                label="Stripe"
+                id="Stripe"
+                name="paymentMethod"
+                value="Stripe"
+                onChange={(e) => setPaymentMethod(e.target.value)}//this would be triggered from the dispatch setPaymentMethod action onChange is triggered
+            ></Form.Check> */}
+            {/* comment */}
           </Col>
         </Form.Group>
         <Button type="submit" variant="primary">
