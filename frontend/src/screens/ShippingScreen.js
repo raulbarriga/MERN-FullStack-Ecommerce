@@ -8,8 +8,7 @@ import { saveShippingAddress } from "../actions/cartActions";
 const ShippingScreen = ({ history }) => {
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
-  //w/ history, when we submit the form, we're gonna want to push to our payment screen
-  const [address, setAddress] = useState(shippingAddress.address); //if it's in local storage, it'll pull it out from there & fill these fields in here
+  const [address, setAddress] = useState(shippingAddress.address);
   const [city, setCity] = useState(shippingAddress.city);
   const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
   const [country, setCountry] = useState(shippingAddress.country);
@@ -18,13 +17,12 @@ const ShippingScreen = ({ history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(saveShippingAddress({ address, city, postalCode, country })); //this'll be the data payload
-    history.push("/payment"); //after the dispatch, we're gonna redirect/push to the oayment screen where we select our payment method
+    dispatch(saveShippingAddress({ address, city, postalCode, country }));
+    history.push("/payment");
   };
 
   return (
     <FormContainer>
-      {/* we pass in the step we're on (the shipping screen step #2) & the step(s) before that */}
       <CheckoutSteps step1 step2 />
       <h1>Shipping</h1>
       <Form onSubmit={submitHandler}>
@@ -75,5 +73,5 @@ const ShippingScreen = ({ history }) => {
     </FormContainer>
   );
 };
-//Continue'll take us to the next step in checking out, which is the payment process
+
 export default ShippingScreen;

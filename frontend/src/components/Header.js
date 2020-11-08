@@ -15,12 +15,10 @@ const Header = ({ history }) => {
 
   const logoutHandler = () => {
     dispatch(logout());
-    //where ever we log out, we'll be redirected to the login page
     history.push("/login");
   };
 
   return (
-    // if we embbed the SearchBox in the header, we won't be able to use props.history when we click the SearchBox submit button (it'll give us an error).
     <header>
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
@@ -46,14 +44,12 @@ const Header = ({ history }) => {
                   </NavDropdown.Item>
                 </NavDropdown>
               ) : (
-                //if you're not logged in, this'll show
                 <LinkContainer to="/login">
                   <Nav.Link>
                     <i className="fas fa-user"></i> Sign In
                   </Nav.Link>
                 </LinkContainer>
               )}
-              {/* This below is like an if statement, only if the first 2 are true will the last thing get shown */}
               {userInfo && userInfo.isAdmin && (
                 <NavDropdown title="admin" id="adminmenu">
                   <LinkContainer to="/admin/userslist">

@@ -28,7 +28,6 @@ import {
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
-  //to evaluate the action type, we use a switch:
   switch (action.type) {
     case USER_LOGIN_REQUEST:
       return {
@@ -51,10 +50,7 @@ export const userLoginReducer = (state = {}, action) => {
   }
 };
 
-//after we creater this reducer, we have to add it to the store
-
 export const userRegisterReducer = (state = {}, action) => {
-  //a pretty simple register reducer
   switch (action.type) {
     case USER_REGISTER_REQUEST:
       return {
@@ -76,7 +72,6 @@ export const userRegisterReducer = (state = {}, action) => {
 };
 
 export const userDetailsReducer = (state = { user: {} }, action) => {
-  //a profile details reducer
   switch (action.type) {
     case USER_DETAILS_REQUEST:
       return {
@@ -100,10 +95,9 @@ export const userDetailsReducer = (state = { user: {} }, action) => {
     default:
       return state;
   }
-}; //next, add it to the store
+};
 
 export const userUpdateProfileReducer = (state = {}, action) => {
-  //a profile update reducer
   switch (action.type) {
     case USER_UPDATE_PROFILE_REQUEST:
       return {
@@ -128,7 +122,6 @@ export const userUpdateProfileReducer = (state = {}, action) => {
 };
 
 export const usersListReducer = (state = { users: [] }, action) => {
-  //a profile update reducer
   switch (action.type) {
     case USERS_LIST_REQUEST:
       return {
@@ -154,7 +147,6 @@ export const usersListReducer = (state = { users: [] }, action) => {
 };
 
 export const userDeleteReducer = (state = {}, action) => {
-  //a profile update reducer
   switch (action.type) {
     case USER_DELETE_REQUEST:
       return {
@@ -175,9 +167,7 @@ export const userDeleteReducer = (state = {}, action) => {
   }
 };
 
-//for the editing of a user's info from the admin
 export const userUpdateReducer = (state = { user: {} }, action) => {
-  //a profile update reducer
   switch (action.type) {
     case USER_UPDATE_REQUEST:
       return {

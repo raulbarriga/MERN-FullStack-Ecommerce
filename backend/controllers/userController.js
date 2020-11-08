@@ -11,8 +11,7 @@ const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({
-    //find one document, & find it by:
-    email, // w/ ES6 it's basically email: email
+    email,
   });
 
   if (user && (await user.matchPassword(password))) {
@@ -24,7 +23,7 @@ const authUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    res.status(401); //unauthorized
+    res.status(401);
 
     throw new Error("Invalid email or password");
   }
@@ -54,20 +53,15 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // Route: PUT /api/users/profile
 // Access: Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  //req.user._id is coming from the logged in user
   const user = await User.findById(req.user._id);
   if (user) {
-    //if it's in the request then it'll be updated by req.body.whatever, otherwise it stays the same/doesn't update
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    //for password, first check if the password was sent:
     if (req.body.password) {
-      //checking if the password was sent
-      //it'll be auto enccrypted b/c of what we did in the model
       user.password = req.body.password;
     }
 
-    const updatedUser = await user.save(); //we save the user's info
+    const updatedUser = await user.save();
     res.json({
       _id: updatedUser._id,
       name: updatedUser.name,
@@ -94,19 +88,17 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (userExists) {
-    res.status(400); //if user already exists, then throw a 400 error, which means a bad request
+    res.status(400);
     throw new Error("User already exists.");
   }
   const user = await User.create({
     name,
     email,
-    password, //right now this password is plain text, but we'll get to the encryption part in a little bit
+    password,
   });
 
   if (user) {
-    //201 means something was created, 200 means it was a success
     res.status(201).json({
-      //we send this data back, the same data from the login b/c we want to authenticate right after we register (log the person in when they create their new account)
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -123,7 +115,6 @@ const registerUser = asyncHandler(async (req, res) => {
 // Route: GET /api/users
 // Access: Private/Admin
 const getUsers = asyncHandler(async (req, res) => {
-  // we pass in an empty object b/c we want to get all users
   const users = await User.find({});
 
   res.json(users);
@@ -133,11 +124,9 @@ const getUsers = asyncHandler(async (req, res) => {
 // Route: DELETE /api/users/:id
 // Access: Private/Admin
 const deleteUser = asyncHandler(async (req, res) => {
-  // we pass in an empty object b/c we want to get all users
   const user = await User.findById(req.params.id);
 
   if (user) {
-    // 1) check if the user exists, if he does we remove him
     await user.remove();
     res.json({ message: "User removed." });
   } else {
@@ -164,18 +153,15 @@ const getUserById = asyncHandler(async (req, res) => {
 // Route: PUT /api/users/:id
 // Access: Private/Admin
 const updateUser = asyncHandler(async (req, res) => {
-  //req.user._id would be from the logged in user, req.params.id is from the user's info in the database
   const user = await User.findById(req.params.id);
 
   if (user) {
-    //these are the things that are getting updated
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    //We won't be able to change the user's password though
     user.isAdmin =
-      req.body.isAdmin === undefined ? user.isAdmin : req.body.isAdmin; // this code came from the Q&A section of the udemy course from a response by Bassir to a question.
+      req.body.isAdmin === undefined ? user.isAdmin : req.body.isAdmin;
 
-    const updatedUser = await user.save(); //we save the user's info
+    const updatedUser = await user.save();
     res.json({
       _id: updatedUser._id,
       name: updatedUser.name,

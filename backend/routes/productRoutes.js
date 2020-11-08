@@ -12,12 +12,10 @@ import { protect, admin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// here we don't need /api/products anymore since we're gonna route to products w/ this file
 router.route("/").get(getProducts).post(protect, admin, createProduct);
 router.route("/:id/reviews").post(protect, createProductReview);
 router.get("/top", getTopProducts);
 
-// here we don't need /api/products/ anymore
 router
   .route("/:id")
   .get(getProductById)

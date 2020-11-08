@@ -9,22 +9,18 @@ import { ordersListAction } from "../actions/orderActions";
 const OrdersListScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  //this'll have the same name as the property name in the store.js file in combine reducers
-  const ordersList = useSelector((state) => state.ordersList); //this comes from the store.js file
+  const ordersList = useSelector((state) => state.ordersList);
   const { loading, error, orders } = ordersList;
 
-  //this and the if statement in useEffect will be used to redirect if we don't have to proper credentials
-  const userLogin = useSelector((state) => state.userLogin); //this comes from the store.js file
+  const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(ordersListAction());
     } else {
-      //if not logged in or not an admin, then...
       history.push("/login");
     }
-    //so if we're not an admin & try to go to an admin only page, then we'll get redirected & won't be able to access it via an admin url
   }, [dispatch, history, userInfo]);
 
   return (
@@ -48,17 +44,11 @@ const OrdersListScreen = ({ history }) => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((
-              order //these orders comes from the state
-            ) => (
+            {orders.map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
-                {/* If the order.user exists, then show the order.user.name */}
                 <td>{order.user && order.user.name}</td>
-                <td>
-                  {/* This'll give us the date. */}
-                  {order.createdAt.substring(0, 10)}
-                </td>
+                <td>{order.createdAt.substring(0, 10)}</td>
                 <td>${order.totalPrice}</td>
                 <td>
                   {order.isPaid ? (

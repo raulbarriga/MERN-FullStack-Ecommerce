@@ -21,16 +21,16 @@ import Meta from "../components/Meta";
 import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
 
 const ProductScreen = ({ history, match }) => {
-  const [qty, setQty] = useState(1); //don't ever set quantity to 0
+  const [qty, setQty] = useState(1);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
 
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state) => state.userLogin); //this comes from the reducer parametere
+  const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const productDetails = useSelector((state) => state.productDetails); //this comes from the reducer parametere
+  const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
   const productCreateReview = useSelector((state) => state.productCreateReview);
@@ -40,31 +40,24 @@ const ProductScreen = ({ history, match }) => {
   } = productCreateReview;
 
   useEffect(() => {
-    // we're checking for this first successProductReview
     if (successProductReview) {
       alert("Review Submitted!");
-      //so all these 3 below are to set things back to their default
+
       setRating(0);
       setComment("");
       dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
     }
-    dispatch(listProductDetails(match.params.id)); //to get the id from the url you use match
+    dispatch(listProductDetails(match.params.id));
   }, [dispatch, match, successProductReview]);
 
   const addToCartHandler = () => {
-    //we need history to actually push
-
-    //we add a query string to the end & set it to whatever they choose from the qty box (this'll be visible on the URL path)
-    history.push(`/cart/${match.params.id}?qty=${qty}`); //props.history.push() will just redirect to what's in the parentheses
-    // thus, when you click add to cart after choosing a qty, you'll be redirected to/cart/the product id with the qty at the end
+    history.push(`/cart/${match.params.id}?qty=${qty}`);
   };
 
   const submitHandler = (e) => {
-    e.preventDefault(); //'this is because we're submitting a form'
+    e.preventDefault();
     dispatch(
-      //these 2 things, the product id & review, are according to the action creator
       createProductReview(match.params.id, {
-        //match.params.id is for the product id
         rating,
         comment,
       })
@@ -184,7 +177,6 @@ const ProductScreen = ({ history, match }) => {
                   {errorProductReview && (
                     <Message variant="danger">{errorProductReview}</Message>
                   )}
-                  {/* This 1st checks if you're logged in to write a review */}
                   {userInfo ? (
                     <Form onSubmit={submitHandler}>
                       <Form.Group controlId="rating">

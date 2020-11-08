@@ -32,7 +32,6 @@ export const createOrder = (order) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        //we add our token to the header
         "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
@@ -42,7 +41,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
 
     dispatch({
       type: ORDER_CREATE_SUCCESS,
-      payload: data, //this 'data' is the newly created order
+      payload: data,
     });
     dispatch({
       type: CART_RESET,
@@ -101,8 +100,6 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
   }
 };
 
-//paymentResult will be coming from PayPal
-//we just pass the orderId, not the whole order object since all we need is the orderId from the order object
 export const payOrder = (orderId, paymentResult) => async (
   dispatch,
   getState
@@ -123,8 +120,6 @@ export const payOrder = (orderId, paymentResult) => async (
       },
     };
 
-    //we don't pass the order in b/c the order's already there, we're just updating w/ the put request
-    //we're setting the paymentResult object, setting isPaid to true & finally setting the paidAt date
     const { data } = await axios.put(
       `/api/orders/${orderId}/pay`,
       paymentResult,
@@ -162,13 +157,10 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        //We don't need 'content-type, 'JSON.
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
-    //we don't pass the order in b/c the order's already there, we're just updating w/ the put request
-    //we're setting the paymentResult object, setting isPaid to true & finally setting the paidAt date
     const { data } = await axios.put(
       `/api/orders/${order._id}/deliver`,
       {},
@@ -214,7 +206,7 @@ export const myOrdersListAction = () => async (dispatch, getState) => {
 
     dispatch({
       type: MY_ORDERS_LIST_SUCCESS,
-      payload: data, //this data is the data for the particular user's orders
+      payload: data,
     });
   } catch (error) {
     const message =
@@ -251,7 +243,7 @@ export const ordersListAction = () => async (dispatch, getState) => {
 
     dispatch({
       type: ORDERS_LIST_SUCCESS,
-      payload: data, //this data is the data for the particular user's orders
+      payload: data,
     });
   } catch (error) {
     const message =

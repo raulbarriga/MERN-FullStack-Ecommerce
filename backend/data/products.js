@@ -72,7 +72,5 @@ const products = [
     numReviews: 12,
   },
 ];
-//have to change it to ES5 since we don't have the ES6 modules
-// module.exports = products
-//but w/ type: module in the package.json of the root folder (& w/ node +v14), we can now use ES6 syntax:
+
 export default products;

@@ -22,67 +22,53 @@ import {
   PRODUCT_TOP_SUCCESS,
   PRODUCT_TOP_REQUEST,
 } from "../constants/productConstants";
-import { logout } from './userActions'
-//think of these as action creators & the constants as actions
-//what we did w/ useEffect before to fetch, we now do here
+import { logout } from "./userActions";
 
-//here's where redux-thunk comes in to allow us to add a function w/i a function w/ dispach an async request
 export const listProducts = (keyword = "", pageNumber = "") => async (
   dispatch
 ) => {
   try {
-    //1st we dispatch the request:
     dispatch({ type: PRODUCTS_LIST_REQUEST });
 
-    //now we make our request:
-    //if we have more than 1 query, we use the & insead of the ? for each query string after the 1st one:
     const { data } = await axios.get(
       `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`
-    ); //this should give us the data
+    );
 
-    //now we dispatch the PRODUCT_LIST_SUCCESS:
-    //this data'll include not just the products but also the pages & the page (we also account for this in the reducer)
     dispatch({
       type: PRODUCTS_LIST_SUCCESS,
-      payload: data, //if it succeeds, the products array from the productReducers'll be filled w/ the data
-    }); //if it fails it'll fire off in the catch below
+      payload: data,
+    });
   } catch (error) {
     dispatch({
       type: PRODUCTS_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
-          : error.message, //this'll give us our custom message from the error handler we made or a generic error message
+          : error.message,
     });
   }
-  //now we need to fire this action creator off in the HomeScreen component
 };
 
 export const listProductDetails = (id) => async (dispatch) => {
   try {
-    //1st we dispatch the request:
     dispatch({ type: PRODUCT_DETAILS_REQUEST });
 
-    //now we make our request:
-    const { data } = await axios.get(`/api/products/${id}`); //this should give us the data
+    const { data } = await axios.get(`/api/products/${id}`);
 
-    //now we dispatch the PRODUCT_DETAILS_SUCCESS:
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
-      payload: data, //if it succeeds, the products array from the productReducers'll be filled w/ the data
-    }); //if it fails it'll fire off in the catch below
+      payload: data,
+    });
   } catch (error) {
     dispatch({
       type: PRODUCT_DETAILS_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
-          : error.message, //this'll give us our custom message from the error handler we made or a generic error message
+          : error.message,
     });
   }
-  //now we need to fire this action creator off in the HomeScreen component
 };
-//once you finish the action creator here, then you can go to your component (in the screens) to import & work on that
 
 export const deleteProduct = (id) => async (dispatch, getState) => {
   try {
@@ -136,7 +122,7 @@ export const createProduct = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.post(`/api/products`, {}, config); //we send an empty object b/c we're making a post request but not actually sending any data here
+    const { data } = await axios.post(`/api/products`, {}, config);
 
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
@@ -178,7 +164,7 @@ export const updateProduct = (product) => async (dispatch, getState) => {
       `/api/products/${product._id}`,
       product,
       config
-    ); //since we're passing in the product to this action, we include it here as well
+    );
 
     dispatch({
       type: PRODUCT_UPDATE_SUCCESS,
@@ -219,7 +205,7 @@ export const createProductReview = (productId, review) => async (
       },
     };
 
-    await axios.post(`/api/products/${productId}/reviews`, review, config); //since we're passing in the product to this action, we include it here as well
+    await axios.post(`/api/products/${productId}/reviews`, review, config);
 
     dispatch({
       type: PRODUCT_CREATE_REVIEW_SUCCESS,

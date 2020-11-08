@@ -2,16 +2,14 @@ import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 
 const SearchBox = ({ history }) => {
-  //since this search box'll be in the header, we won't have access to props.history so we'll use something called a render prop
   const [keyword, setKeyword] = useState("");
 
   const submitHandler = (e) => {
-    e.preventDefault(); //since we have a form, we do this
+    e.preventDefault();
     if (keyword.trim()) {
-      //.trim is to trim any white space
-      history.push(`/search/${keyword}`); //this'll go to search/whatever that keyword is
+      history.push(`/search/${keyword}`);
     } else {
-      history.push("/"); //if there's no keyword, then we'll just push to the homepage
+      history.push("/");
     }
   };
 

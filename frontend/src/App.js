@@ -33,7 +33,6 @@ const App = () => {
           <Route path="/register" component={RegisterScreen} />
           <Route path="/profile" component={ProfileScreen} />
           <Route path="/product/:id" component={ProductScreen} />
-          {/* we make the id optional by adding a ? after it */}
           <Route path="/cart/:id?" component={CartScreen} />
           <Route path="/admin/userslist" component={UsersListScreen} />
           <Route
@@ -52,10 +51,8 @@ const App = () => {
             component={ProductEditScreen}
           />
           <Route path="/admin/user/:id/edit" component={UserEditScreen} />
-          {/* :keyword means this is just a placeholder for whatever that keyword is (we also do that for :id for whatever that id is) */}
           <Route path="/search/:keyword" component={HomeScreen} exact />
           <Route path="/page/:pageNumber" component={HomeScreen} exact />
-          {/* If there's a keyword, we'll use this search below, if there isn't, we'll use the page/pageNumber above */}
           <Route
             path="/search/:keyword/page/:pageNumber"
             component={HomeScreen}

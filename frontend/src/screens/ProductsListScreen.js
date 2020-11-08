@@ -38,18 +38,15 @@ const ProductsListScreen = ({ history, match }) => {
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    //as soon as useEffect we want to dispatch product create reset
     dispatch({ type: PRODUCT_CREATE_RESET });
     if (!userInfo || !userInfo.isAdmin) {
-      //check if we're an admin
       history.push("/login");
     }
     if (successCreate) {
       history.push(`/admin/product/${createdProduct._id}/edit`);
     } else {
-      dispatch(listProducts("", pageNumber)); //the '' is for the keyword default state
+      dispatch(listProducts("", pageNumber));
     }
-    //so if we're not an admin & try to go to an admin only page, then we'll get redirected & won't be able to access it via an admin url
   }, [
     dispatch,
     history,
@@ -58,7 +55,7 @@ const ProductsListScreen = ({ history, match }) => {
     successCreate,
     createdProduct,
     pageNumber,
-  ]); // when a product is succefully deleted, it'll list the products again w/ the useEffect
+  ]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure you?")) {
@@ -67,7 +64,6 @@ const ProductsListScreen = ({ history, match }) => {
   };
 
   const createProductHandler = () => {
-    // create prroduct
     dispatch(createProduct());
   };
 

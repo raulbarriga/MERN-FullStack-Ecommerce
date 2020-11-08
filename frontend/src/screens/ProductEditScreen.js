@@ -31,17 +31,14 @@ const ProductEditScreen = ({ match, history }) => {
     loading: loadingUpdate,
     error: errorUpdate,
     success: successUpdate,
-  } = productUpdate; //we rename since we've already used the loading, error, & product variables above for productDetails
+  } = productUpdate;
 
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
       history.push("/admin/productslist");
     } else {
-      //we're gonna populate the user's details for the edit screen of the selected user
-      //here we just check for one of the fields like name
       if (!product.name || product._id !== productId) {
-        //productId comes from the url path
         dispatch(listProductDetails(productId));
       } else {
         setName(product.name);
@@ -56,35 +53,35 @@ const ProductEditScreen = ({ match, history }) => {
   }, [dispatch, history, productId, product, successUpdate]);
 
   const uploadFileHandler = async (e) => {
-    const file = e.target.files[0]; //this'll be an array, since we're only uploading a single file it'll be the frist one [0]
+    const file = e.target.files[0];
     const formData = new FormData();
-    formData.append("image", file); //here we call 'image' just like we did in the backend on the uploadRoutes file
-    setUploading(true); // this is for the spinner Loader
+    formData.append("image", file);
+    setUploading(true);
 
     try {
       const config = {
         headers: {
-          "Content-Type": "multipart/form-data", // ***when you upload an image it has to have the Content-Type of this***
+          "Content-Type": "multipart/form-data",
         },
       };
 
       const { data } = await axios.post("/api/upload", formData, config);
 
-      setImage(data); // what we send back as this data variable is the path
-      setUploading(false); // we set this back to false
+      setImage(data);
+      setUploading(false);
     } catch (error) {
       console.error(error);
-      setUploading(false); // we set this back to false so we don't have a neverending spinner lol
+      setUploading(false);
     }
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // update product
+
     dispatch(
       updateProduct({
-        _id: productId, //coming from the url
-        name, //all from the component state
+        _id: productId,
+        name,
         price,
         image,
         brand,
