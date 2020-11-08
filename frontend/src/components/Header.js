@@ -21,7 +21,7 @@ const Header = ({ history }) => {
 
   return (
     <header>
-    // if we embbed the SearchBox in the header, we won't be able to use props.history when we click the SearchBox submit button (it'll give us an error).
+    {/* if we embbed the SearchBox in the header, we won't be able to use props.history when we click the SearchBox submit button (it'll give us an error). */}
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
