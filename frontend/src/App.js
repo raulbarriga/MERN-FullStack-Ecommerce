@@ -33,6 +33,9 @@ const App = () => {
           <Route path="/register" component={RegisterScreen} />
           <Route path="/profile" component={ProfileScreen} />
           <Route path="/product/:id" component={ProductScreen} />
+
+          {/* we make the id optional by adding a ? after it. */}
+
           <Route path="/cart/:id?" component={CartScreen} />
           <Route path="/admin/userslist" component={UsersListScreen} />
           <Route

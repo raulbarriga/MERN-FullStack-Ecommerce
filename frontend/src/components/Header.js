@@ -20,6 +20,7 @@ const Header = ({ history }) => {
 
   return (
     <header>
+    {/* if we embbed the SearchBox in the header, we won't be able to use props.history when we click the SearchBox submit button (it'll give us an error). */}
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
@@ -34,8 +35,9 @@ const Header = ({ history }) => {
                   <i className="fas fa-shopping-cart"></i> Cart
                 </Nav.Link>
               </LinkContainer>
-              {userInfo ? ( //if you're logged in, this'll show
+              {userInfo ? (
                 <NavDropdown title={userInfo.name} id="username">
+                  {/* if you're logged in, this'll show */}
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
@@ -45,6 +47,7 @@ const Header = ({ history }) => {
                 </NavDropdown>
               ) : (
                 <LinkContainer to="/login">
+                  {/* if you're not logged in, this'll show */}
                   <Nav.Link>
                     <i className="fas fa-user"></i> Sign In
                   </Nav.Link>

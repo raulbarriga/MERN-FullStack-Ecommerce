@@ -57,7 +57,8 @@ const ProductScreen = ({ history, match }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(
-      createProductReview(match.params.id, {
+      createProductReview(match.params.id, {//these 2 things, the product id & review, are according to the action creator
+        //match.params.id is for the product id
         rating,
         comment,
       })
