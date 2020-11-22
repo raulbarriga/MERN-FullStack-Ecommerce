@@ -32,10 +32,7 @@ const UserEditScreen = ({ match, history }) => {
       dispatch({ type: USER_UPDATE_RESET });
       history.push("/admin/userslist");
     } else {
-      //we're gonna populate the user's details for the edit screen of the selected user
-      //here we just check for one of the fields like name
       if (!user.name || user._id !== userId) {
-        //userId comes from the url path
         dispatch(getUserDetails(userId));
       } else {
         setName(user.name);
@@ -47,7 +44,7 @@ const UserEditScreen = ({ match, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(updateUser({ _id: userId, name, email, isAdmin })); // here we rename the_id
+    dispatch(updateUser({ _id: userId, name, email, isAdmin }));
   };
 
   return (

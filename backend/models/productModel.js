@@ -2,14 +2,11 @@ import mongoose from "mongoose";
 
 const reviewSchema = mongoose.Schema(
   {
-    //this Schema is for the individual review rating for each User
-    // the review on the productSchema is the average review out of all the submitted reviews from Users
     name: {
       type: String,
       required: true,
     },
     user: {
-      //we add user here to associate a user to a review b/c we want to implement checking that if the user already added a review so we don't duplicate a review
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
@@ -29,10 +26,9 @@ const reviewSchema = mongoose.Schema(
 const productSchema = mongoose.Schema(
   {
     user: {
-      // if we have more than 1 admin, we want to know which admin created which product:
-      type: mongoose.Schema.Types.ObjectId, //gets the user id from the database
+      type: mongoose.Schema.Types.ObjectId, 
       required: true,
-      ref: "User", //to reference the specific model for the object id above/also adds a relationship between the product & the user
+      ref: "User", 
     },
     name: {
       type: String,
@@ -54,9 +50,8 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    reviews: [reviewSchema], //an array of review objects (from a separate Schema)
+    reviews: [reviewSchema], 
     rating: {
-      //average rating of all the ratings in the reviews
       type: Number,
       required: true,
       default: 0,
@@ -78,7 +73,6 @@ const productSchema = mongoose.Schema(
     },
   },
   {
-    //mongoose has this 2nd parameter object like for created at w/ time
     timestamps: true,
   }
 );

@@ -10,26 +10,21 @@ import { ORDER_CREATE_RESET } from "../constants/orderConstants";
 const PlaceOrderScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  // this function'll show 2 decimal places (even if it's $0, it'll be $0.00) & we'll use it to wrap the money amounts
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
   };
 
-  //we grab the items from the cart
   const cart = useSelector((state) => state.cart);
 
-  //calculate prices:
-  //!st: itemsPrice - the price of everything, including the quantity:
   cart.itemsPrice = addDecimals(
     cart.cartItems.reduce(
       (accum, currItem) => accum + currItem.price * currItem.qty,
       0
     )
-  ); //0 is for the start of the accumulator for this array
+  );
 
-  //next is the shipping price, we'll keep it simple: if it's under $100, we'll say it's $10 for shipping:
   cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 100);
-  // a sale's tax of 15%
+
   cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
   cart.totalPrice = (
     Number(cart.itemsPrice) +
@@ -37,13 +32,12 @@ const PlaceOrderScreen = ({ history }) => {
     Number(cart.taxPrice)
   ).toFixed(2);
 
-  const orderCreate = useSelector((state) => state.orderCreate); //we get the orderCreate from the state
-  const { order, success, error } = orderCreate; // we get this from orderCreate
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order, success, error } = orderCreate;
 
   useEffect(() => {
     if (success) {
-      // this id comes from the order variable that was destructured above from orderCreate
-      history.push(`/order/${order._id}`); //this doesn't exists yet until it's created in the order screen
+      history.push(`/order/${order._id}`);
       dispatch({ type: ORDER_CREATE_RESET });
     }
     // eslint-disable-next-line
@@ -52,7 +46,6 @@ const PlaceOrderScreen = ({ history }) => {
   const placeOrderHandler = () => {
     dispatch(
       createOrder({
-        //all this'll come from our cart
         orderItems: cart.cartItems,
         shippingAddress: cart.shippingAddress,
         paymentMethod: cart.paymentMethod,
@@ -61,7 +54,7 @@ const PlaceOrderScreen = ({ history }) => {
         taxPrice: cart.taxPrice,
         totalPrice: cart.totalPrice,
       })
-    ); //once we dispatch createOrder, it's gonna send everything down to the state so we have to grab it from the state w/ useSelector
+    );
   };
 
   return (
@@ -83,14 +76,9 @@ const PlaceOrderScreen = ({ history }) => {
               <h2>Payment Method</h2>
               <strong>Method: </strong>
               {cart.paymentMethod}
-              {/* Payment method is gonna be saved to local storage like the shipping address is, 
-              we can add that if we want to in the action creator, but he says there's really no need 
-              to have that. Thus, w/o local storage right now, if you reload the page, the payment 
-              method'll go away. */}
             </ListGroup.Item>
             <ListGroup.Item>
               <h2>Order Items</h2>
-              {/* need to check to make sure there's items in our cart */}
               {cart.cartItems.length === 0 ? (
                 <Message>Your cart is empty</Message>
               ) : (

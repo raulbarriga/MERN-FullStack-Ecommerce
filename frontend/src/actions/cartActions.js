@@ -6,7 +6,6 @@ import {
   CART_SAVE_PAYMENT_METHOD,
 } from "../constants/cartConstants";
 
-//getState'll let us get anything we want from the combineReducers in the store w/ a dot
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   //thunk
   const { data } = await axios.get(`/api/products/${id}`);
@@ -23,9 +22,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
     },
   });
 
-  //to save the cart to localStorage:
-  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems)); //we can only save strings in localStorage
-  //then we can use JSON.parse() to parse it back to javascript
+  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
 };
 
 export const removeFromCart = (id) => (dispatch, getState) => {
@@ -46,7 +43,6 @@ export const saveShippingAddress = (data) => (dispatch) => {
   localStorage.setItem("shippingAddress", JSON.stringify(data));
 };
 
-// 'data' will be the payment method
 export const savePaymentMethod = (data) => (dispatch) => {
   dispatch({
     type: CART_SAVE_PAYMENT_METHOD,

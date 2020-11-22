@@ -15,7 +15,6 @@ const Header = ({ history }) => {
 
   const logoutHandler = () => {
     dispatch(logout());
-    //where ever we log out, we'll be redirected to the login page
     history.push("/login");
   };
 
@@ -54,7 +53,6 @@ const Header = ({ history }) => {
                   </Nav.Link>
                 </LinkContainer>
               )}
-              {/* This below is like an if statement, only if the first 2 are true will the last thing get shown */}
               {userInfo && userInfo.isAdmin && (
                 <NavDropdown title="admin" id="adminmenu">
                   <LinkContainer to="/admin/userslist">

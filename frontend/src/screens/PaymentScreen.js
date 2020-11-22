@@ -19,13 +19,12 @@ const PaymentScreen = ({ history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(savePaymentMethod(paymentMethod)); //this'll be the data payload
-    history.push("/placeorder"); //after the dispatch, we're gonna redirect/push to the oayment screen where we select our payment method
+    dispatch(savePaymentMethod(paymentMethod));
+    history.push("/placeorder");
   };
 
   return (
     <FormContainer>
-      {/* we pass in the step we're on (the shipping screen step #2) & the step(s) before that */}
       <CheckoutSteps step1 step2 step3 />
       <h1>Payment Method</h1>
       <Form onSubmit={submitHandler}>
@@ -50,6 +49,7 @@ const PaymentScreen = ({ history }) => {
                 value="Stripe"
                 onChange={(e) => setPaymentMethod(e.target.value)}//this would be triggered from the dispatch setPaymentMethod action onChange is triggered
             ></Form.Check> */}
+            {/* comment */}
           </Col>
         </Form.Group>
         <Button type="submit" variant="primary">
@@ -59,5 +59,5 @@ const PaymentScreen = ({ history }) => {
     </FormContainer>
   );
 };
-//Continue'll take us to the next step in checking out, which is the payment process
+
 export default PaymentScreen;

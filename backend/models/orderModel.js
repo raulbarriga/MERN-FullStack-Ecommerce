@@ -26,7 +26,7 @@ const orderSchema = mongoose.Schema(
           required: true,
         },
         product: {
-          type: mongoose.Schema.Types.ObjectId, //gonna be related to the productSchema
+          type: mongoose.Schema.Types.ObjectId, 
           required: true,
           ref: "Product",
         },
@@ -51,14 +51,12 @@ const orderSchema = mongoose.Schema(
       },
     },
     paymentMethod: {
-      //gonna make this scalable to add more payment methods if you want
       type: String,
       required: true,
     },
     paymentResult: {
-      //this is gonna come from paypal (when we make the payment successfully), we'll get some data back here
       id: { type: String },
-      status: { type: String }, //if it's paid or not
+      status: { type: String }, 
       update_time: { type: String },
       email_address: { type: String },
     },
@@ -83,7 +81,6 @@ const orderSchema = mongoose.Schema(
       default: false,
     },
     paidAt: {
-      //for the time & date
       type: Date,
     },
     isDelivered: {
@@ -92,12 +89,10 @@ const orderSchema = mongoose.Schema(
       default: false,
     },
     deliveredAt: {
-      //for the time & date
       type: Date,
     },
   },
   {
-    //mongoose has this 2nd parameter object like for created at w/ time
     timestamps: true,
   }
 );

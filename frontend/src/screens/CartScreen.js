@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux"; //pretty much anytime your're dealing w/ redux, you're gonna bring in these for the component
+import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
   Col,
@@ -14,18 +14,14 @@ import Message from "../components/Message";
 import { addToCart, removeFromCart } from "../actions/cartActions";
 
 const CartScreen = ({ match, location, history }) => {
-  //location for the quantity query string, history's to redirect
   const productId = match.params.id;
-  //we use .split to only get the number after the ?=     , .split will create an array at [0] for before the '=' & at [1] for after the '=', then we wrap it w/ Number() to get it in number format
   const qty = location.search ? Number(location.search.split("=")[1]) : 1;
-  //console.log(qty)//gives ?=4 , the params at the end of the URL path, not every url will give a qty
 
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
   useEffect(() => {
-    //we only want to dispatch if there's a product id, not if we're just in the cart page:
     if (productId) {
       dispatch(addToCart(productId, qty));
     }
@@ -98,7 +94,6 @@ const CartScreen = ({ match, location, history }) => {
         <Card>
           <ListGroup variant="flush">
             <ListGroup.Item>
-              {/* .reducer() array method takes in an accumulator & a current item, the 2nd argument is where we want the item to start, which is usually 0  */}
               <h2>
                 Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
                 items

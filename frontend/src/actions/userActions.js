@@ -31,7 +31,6 @@ export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_LOGIN_REQUEST });
 
-    // here we set the application/json type for the url headers & other headers
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -43,35 +42,29 @@ export const login = (email, password) => async (dispatch) => {
       { email, password },
       config
     );
-    //after we make the request, we make a dispatch of success, just like we did w/ the products
+
     dispatch({
       type: USER_LOGIN_SUCCESS,
-      payload: data, // for payload, we send the data that we get back from the path '/api/users/login'
+      payload: data,
     });
 
-    //this'll give back as data the res.json from the userController file in the backend (the id, name, email, isAdmin, & token) & will be set to local storage here:
-
-    localStorage.setItem("userInfo", JSON.stringify(data)); //userInfo is the property for the success reducer object
+    localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
-      //our fails are basically the same from the other action files
       type: USER_LOGIN_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
-          : error.message, //this'll give us our custom message from the error handler we made or a generic error message
+          : error.message,
     });
   }
-}; //after this action, we go to set an initial state in the store file
+};
 
 export const logout = () => (dispatch) => {
-  // we want to do 2 things:
-  // 1) remove it from local storage
   localStorage.removeItem("userInfo");
   localStorage.removeItem("cartItems");
   localStorage.removeItem("shippingAddress");
   localStorage.removeItem("paymentMethod");
-  // 2) dispatch user log out w/ its constant action
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: MY_ORDERS_LIST_RESET });
@@ -83,7 +76,6 @@ export const register = (name, email, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_REGISTER_REQUEST });
 
-    // here we set the application/json type for the url headers & other headers
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -95,21 +87,18 @@ export const register = (name, email, password) => async (dispatch) => {
       { name, email, password },
       config
     );
-    //after we make the request, we make a dispatch of success, just like we did w/ the products
+
     dispatch({
       type: USER_REGISTER_SUCCESS,
-      payload: data, // for payload, we send the data that we get back from the path '/api/users/login'
+      payload: data,
     });
 
     dispatch({
-      // when they register we also log them in w/ this dispatch action after they register successfully
       type: USER_LOGIN_SUCCESS,
       payload: data,
-    }); //the local storage below stays the same since it was used for loggin in & that's what we're also doing after we register
+    });
 
-    //this'll give back as data the res.json from the userController file in the backend (the id, name, email, isAdmin, & token) & will be set to local storage here:
-
-    localStorage.setItem("userInfo", JSON.stringify(data)); //userInfo is the property for the success reducer object
+    localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
@@ -119,16 +108,15 @@ export const register = (name, email, password) => async (dispatch) => {
           : error.message,
     });
   }
-}; //from here we move to create the screen component
+};
 
 export const getUserDetails = (id) => async (dispatch, getState) => {
-  //we can get our userInfo from getState which'll have the token in it
   try {
     dispatch({ type: USER_DETAILS_REQUEST });
 
     const {
       userLogin: { userInfo },
-    } = getState(); //we destructure from getState userLogin then from that we destructure userInfo
+    } = getState();
 
     const config = {
       headers: {
@@ -168,7 +156,6 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        //we add our token to the header
         "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
@@ -210,7 +197,6 @@ export const listUsers = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        //we add our token to the header
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
@@ -236,7 +222,6 @@ export const listUsers = () => async (dispatch, getState) => {
   }
 };
 
-//we know to pass in the id since that's what we set in the userController where we use the findById method
 export const deleteUser = (id) => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_DELETE_REQUEST });
@@ -247,7 +232,6 @@ export const deleteUser = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        //we add our token to the header
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
@@ -272,7 +256,6 @@ export const deleteUser = (id) => async (dispatch, getState) => {
   }
 };
 
-//to edit the user by the admin
 export const updateUser = (user) => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_UPDATE_REQUEST });
@@ -284,12 +267,10 @@ export const updateUser = (user) => async (dispatch, getState) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        //we add our token to the header
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
-    //from the whole user object, we just get the ._id
     const { data } = await axios.put(`/api/users/${user._id}`, user, config);
 
     dispatch({

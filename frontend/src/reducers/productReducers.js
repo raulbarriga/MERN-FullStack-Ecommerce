@@ -25,24 +25,19 @@ import {
   PRODUCT_TOP_FAIL,
 } from "../constants/productConstants";
 
-//a reducer takes in 2 things: an initial state & an action
-//when we create an action reducer we're gonna dispatch an action to one of these reducers, respectively
-//action'll be an object that has a type & it might also have a payload
-
 export const productsListReducer = (state = { products: [] }, action) => {
-  //to evaluate the action type, we use a switch:
   switch (action.type) {
     case PRODUCTS_LIST_REQUEST:
       return {
-        loading: true, //when we make the request, we want the component to know that it's currently fetching/loading
+        loading: true,
         products: [],
       };
     case PRODUCTS_LIST_SUCCESS:
       return {
-        loading: false, // b/c it's done loading/making the request
+        loading: false,
         products: action.payload.products,
         pages: action.payload.pages,
-        page: action.payload.page, //we account for these last 2 here b/c in the backend controller
+        page: action.payload.page,
       };
     case PRODUCTS_LIST_FAIL:
       return {
@@ -53,21 +48,20 @@ export const productsListReducer = (state = { products: [] }, action) => {
       return state;
   }
 };
-//after you create the contant(s), you can create a reducer here
+
 export const productDetailsReducer = (
   state = { product: { reviews: [] } },
   action
 ) => {
-  //to evaluate the action type, we use a switch:
   switch (action.type) {
     case PRODUCT_DETAILS_REQUEST:
       return {
-        loading: true, //when we make the request, we want the component to know that it's currently fetching/loading
+        loading: true,
         ...state,
       };
     case PRODUCT_DETAILS_SUCCESS:
       return {
-        loading: false, // b/c it's done loading/making the request
+        loading: false,
         product: action.payload,
       };
     case PRODUCT_DETAILS_FAIL:
@@ -79,7 +73,6 @@ export const productDetailsReducer = (
       return state;
   }
 };
-//remember that whenever you create a new reducer, you have to add it to the store
 
 export const productDeleteReducer = (state = {}, action) => {
   switch (action.type) {

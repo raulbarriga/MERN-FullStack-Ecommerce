@@ -9,11 +9,10 @@ import { listUsers, deleteUser } from "../actions/userActions";
 const UsersListScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  const usersList = useSelector((state) => state.usersList); //this comes from the store.js file
+  const usersList = useSelector((state) => state.usersList);
   const { loading, error, users } = usersList;
 
-  //this and the if statement in useEffect will be used to redirect if we don't have to proper credentials
-  const userLogin = useSelector((state) => state.userLogin); //this comes from the store.js file
+  const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const userDelete = useSelector((state) => state.userDelete);
@@ -23,10 +22,8 @@ const UsersListScreen = ({ history }) => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listUsers());
     } else {
-      //if not logged in or not an admin, then...
       history.push("/login");
     }
-    //so if we're not an admin & try to go to an admin only page, then we'll get redirected & won't be able to access it via an admin url
   }, [dispatch, history, userInfo, successDelete]);
 
   const deleteHandler = (id) => {

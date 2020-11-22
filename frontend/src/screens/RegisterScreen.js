@@ -8,7 +8,6 @@ import FormContainer from "../components/FormContainer";
 import { register } from "../actions/userActions";
 
 const RegisterScreen = ({ location, history }) => {
-  //component level state for the form, w/ an empty string as default
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,27 +16,23 @@ const RegisterScreen = ({ location, history }) => {
 
   const dispatch = useDispatch();
   const userRegister = useSelector((state) => state.userRegister);
-  const { loading, error, userInfo } = userRegister; //values coming from the user reducer properties
+  const { loading, error, userInfo } = userRegister;
 
   //this'll have the url query string
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
   useEffect(() => {
     if (userInfo) {
-      //if we're not logged in, it's gonna be null
-      //but if userInfo exists(if we're logged in), then
       history.push(redirect);
     }
   }, [history, userInfo, redirect]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    //we need to check confirmed password is equal to the password above it:
+
     if (password !== confirmPassword) {
       setMessage("Passwords do not match");
     } else {
-      //if passwords match, then we dispatch register:
-      //This is where we dispatch register
       dispatch(register(name, email, password));
     }
   };
@@ -102,5 +97,3 @@ const RegisterScreen = ({ location, history }) => {
 };
 
 export default RegisterScreen;
-//after we finish creating the screen, we need to add it via app.js file
-//after that, we move to another app functionality: user profile backend

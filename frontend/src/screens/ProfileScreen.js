@@ -9,7 +9,6 @@ import { myOrdersListAction } from "../actions/orderActions";
 import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
 
 const ProfileScreen = ({ location, history }) => {
-  //component level state for the form, w/ an empty string as default
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +18,7 @@ const ProfileScreen = ({ location, history }) => {
   const dispatch = useDispatch();
 
   const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails; //values coming from the user reducer properties
+  const { loading, error, user } = userDetails;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -27,22 +26,19 @@ const ProfileScreen = ({ location, history }) => {
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { success } = userUpdateProfile;
 
-  //the name myOrdersList is from the store.js combineReducers property
   const myOrdersList = useSelector((state) => state.myOrdersList);
-  const { loading: loadingOrders, error: errorOrders, orders } = myOrdersList; // renaming loading & errors to avoid an error
+  const { loading: loadingOrders, error: errorOrders, orders } = myOrdersList;
 
   useEffect(() => {
     if (!userInfo) {
-      //if not logged in, then redirect to '/login'
       history.push("/login");
     } else {
       if (!user || !user.name || success) {
         dispatch({ type: USER_UPDATE_PROFILE_RESET });
-        //we check for the name
-        dispatch(getUserDetails("profile")); //takes in an id, but in this case we pass 'profile' for the userAction path which'll redirect to /profile & not /anID
-        dispatch(myOrdersListAction()); //display all orders
+
+        dispatch(getUserDetails("profile"));
+        dispatch(myOrdersListAction());
       } else {
-        //if we DO have the user, we:
         setName(user.name);
         setEmail(user.email);
       }
@@ -51,13 +47,11 @@ const ProfileScreen = ({ location, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    //we need to check confirmed password is equal to the password above it:
+
     if (password !== confirmPassword) {
       setMessage("Passwords do not match");
     } else {
-      //This is where we dispatch update profile
-      dispatch(updateUserProfile({ id: user._id, name, email, password })); //takes in an objeect
-      //when it's submitted, we want a success message (success is from the reducer) below
+      dispatch(updateUserProfile({ id: user._id, name, email, password }));
     }
   };
 
@@ -126,7 +120,6 @@ const ProfileScreen = ({ location, history }) => {
                 <th>TOTAL</th>
                 <th>PAID</th>
                 <th>DELIVERED</th>
-                {/* THIS LAST ONE IS FOR THE DETAILS */}
                 <th></th>
               </tr>
             </thead>
@@ -134,7 +127,6 @@ const ProfileScreen = ({ location, history }) => {
               {orders.map((order) => (
                 <tr key={order._id}>
                   <td>{order._id}</td>
-                  {/* we use substring to only get the date info we want */}
                   <td>{order.createdAt.substring(0, 10)}</td>
                   <td>{order.totalPrice}</td>
                   <td>
@@ -169,5 +161,3 @@ const ProfileScreen = ({ location, history }) => {
 };
 
 export default ProfileScreen;
-//after we finish creating the screen, we need to add it via app.js file
-//after that, we move to another app functionality: user profile backend
