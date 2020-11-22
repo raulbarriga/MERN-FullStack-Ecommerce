@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card } from "react-bootstrap";
+import { Card, OverlayTrigger, Tooltip } from "react-bootstrap";
 import Rating from "./Rating";
 
 const Product = ({ product }) => {
@@ -12,9 +12,18 @@ const Product = ({ product }) => {
 
       <Card.Body>
         <Link to={`/product/${product._id}`}>
-          <Card.Title as="div">
-            <strong>{product.name}</strong>
-          </Card.Title>
+          <OverlayTrigger
+            placement="bottom"
+            overlay={
+              <Tooltip>
+                {product.name}
+              </Tooltip>
+            }
+          >
+            <Card.Title as="div">
+              <strong>{product.name}</strong>
+            </Card.Title>
+          </OverlayTrigger>
         </Link>
 
         <Card.Text as="div">
