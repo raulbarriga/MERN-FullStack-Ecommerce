@@ -20,10 +20,14 @@ h2 {
 }
 
 /* carousel */
+.container .bg-dark.carousel.slide .carousel-item {
+  justify-content: center !important;
+}
 .carousel-item-next,
 .carousel-item-prev,
 .carousel-item.active {
   display: flex;
+  
 }
 .carousel-caption {
   position: absolute;
