@@ -11,7 +11,9 @@
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
-    "build": "npm install && cd frontend && npm install && npm run build",
+    "dev-build": "npm install && cd frontend && npm install && npm run build",
+    "prod-client-build": "cd frontend && npm install && npm run build",
+    "prod-server-build": "npm install",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node backend/seeder",
