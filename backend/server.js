@@ -3,7 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import colors from "colors";
 import morgan from "morgan";
-import cors from "cors";
+// import cors from "cors";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import connectDB from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
@@ -22,17 +22,17 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(express.json());
 
-const corsOptions = {
-  origin:
-    process.env.NODE_ENV === "production"
-      ? process.env.PRODUCTION_SERVER_URL
-      : "http://localhost:3000",
-  credentials: true, // Enable credentials (cookies, etc.) if needed
-  methods: "GET, POST, PUT, DELETE", // Adjust based on your application's needs
-  allowedHeaders: "Content-Type, Authorization",
-};
+// const corsOptions = {
+//   origin:
+//     process.env.NODE_ENV === "production"
+//       ? process.env.PRODUCTION_SERVER_URL
+//       : "http://localhost:3000",
+//   credentials: true, // Enable credentials (cookies, etc.) if needed
+//   methods: "GET, POST, PUT, DELETE", // Adjust based on your application's needs
+//   allowedHeaders: "Content-Type, Authorization",
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
