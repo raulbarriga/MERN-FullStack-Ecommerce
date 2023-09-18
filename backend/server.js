@@ -22,12 +22,17 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(express.json());
 
-// const allowedOrigins =
-//   process.env.NODE_ENV === "production"
-//     ? ["https://mern-store-frontend.onrender.com"]
-//     : ["http://localhost:3000"];
+const corsOptions = {
+  origin:
+    process.env.NODE_ENV === "production"
+      ? process.env.PRODUCTION_SERVER_URL
+      : "http://localhost:3000",
+  credentials: true, // Enable credentials (cookies, etc.) if needed
+  methods: "GET, POST, PUT, DELETE", // Adjust based on your application's needs
+  allowedHeaders: "Content-Type, Authorization",
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
@@ -61,6 +66,7 @@ const PORT = process.env.PORT || 8000;
 app.listen(
   PORT,
   console.log(
-    `Server running in ${process.env.NODE_ENV} mode on http://localhost:${PORT}`.yellow.bold
+    `Server running in ${process.env.NODE_ENV} mode on http://localhost:${PORT}`
+      .yellow.bold
   )
 );
