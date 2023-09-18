@@ -11,9 +11,8 @@
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
-    "dev-build": "npm install && cd frontend && npm install && npm run build",
-    "prod-client-build": "cd frontend && npm install && npm run build",
-    "prod-server-build": "npm install",
+    "install": "npm install && cd frontend && npm install",
+    "build": "npm install && cd frontend && npm install && npm run build",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node backend/seeder",
@@ -23,6 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.40.0",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -31,7 +31,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.13",
     "morgan": "^1.10.0",
-    "multer": "^1.4.2"
+    "multer": "^1.4.2",
+    "streamifier": "^0.1.1"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",

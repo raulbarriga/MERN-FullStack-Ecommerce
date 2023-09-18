@@ -1,4 +1,5 @@
-import axios from "axios";
+// import API from "../api/index";
+import axios from 'axios';
 import { CART_RESET } from "../constants/cartConstants";
 import {
   ORDER_CREATE_REQUEST,
@@ -37,7 +38,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.post(`${process.env.BASE_PRODUCTION_SERVER_URL}/api/orders`, order, config);
+    const { data } = await axios.post(`/api/orders`, order, config);
 
     dispatch({
       type: ORDER_CREATE_SUCCESS,
@@ -79,7 +80,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`${process.env.BASE_PRODUCTION_SERVER_URL}/api/orders/${id}`, config);
+    const { data } = await axios.get(`/api/orders/${id}`, config);
 
     dispatch({
       type: ORDER_DETAILS_SUCCESS,
@@ -100,50 +101,48 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
   }
 };
 
-export const payOrder = (orderId, paymentResult) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: ORDER_PAY_REQUEST,
-    });
+export const payOrder =
+  (orderId, paymentResult) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ORDER_PAY_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.put(
-      `${process.env.BASE_PRODUCTION_SERVER_URL}/api/orders/${orderId}/pay`,
-      paymentResult,
-      config
-    );
+      const { data } = await axios.put(
+        `/api/orders/${orderId}/pay`,
+        paymentResult,
+        config
+      );
 
-    dispatch({
-      type: ORDER_PAY_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === "Not authorized, token failed") {
-      dispatch(logout());
+      dispatch({
+        type: ORDER_PAY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: ORDER_PAY_FAIL,
+        payload: message,
+      });
     }
-    dispatch({
-      type: ORDER_PAY_FAIL,
-      payload: message,
-    });
-  }
-};
+  };
 
 export const deliverOrder = (order) => async (dispatch, getState) => {
   try {
@@ -162,7 +161,7 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
     };
 
     const { data } = await axios.put(
-      `${process.env.BASE_PRODUCTION_SERVER_URL}/api/orders/${order._id}/deliver`,
+      `/api/orders/${order._id}/deliver`,
       {},
       config
     );
@@ -202,7 +201,7 @@ export const myOrdersListAction = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`${process.env.BASE_PRODUCTION_SERVER_URL}/api/orders/myorders`, config);
+    const { data } = await axios.get(`/api/orders/myorders`, config);
 
     dispatch({
       type: MY_ORDERS_LIST_SUCCESS,
@@ -239,7 +238,7 @@ export const ordersListAction = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`${process.env.BASE_PRODUCTION_SERVER_URL}/api/orders`, config);
+    const { data } = await axios.get(`/api/orders`, config);
 
     dispatch({
       type: ORDERS_LIST_SUCCESS,
