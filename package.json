@@ -6,7 +6,7 @@
     "npm": "6.x"
   },
   "description": "MERN Shopping Cart App",
-  "main": "backend/server.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node backend/server",
