@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import expressAsyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 
+// for regular registered user
 const protect = expressAsyncHandler(async (req, res, next) => {
   let token;
 
@@ -29,6 +30,7 @@ const protect = expressAsyncHandler(async (req, res, next) => {
   }
 });
 
+// for admin user only
 const admin = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();

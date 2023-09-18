@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,7 +36,7 @@ const ProductEditScreen = ({ match, history }) => {
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
-      history.push("/admin/productslist");
+      history.push("/admin/productlist");
     } else {
       if (!product.name || product._id !== productId) {
         dispatch(listProductDetails(productId));
@@ -77,7 +77,6 @@ const ProductEditScreen = ({ match, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-
     dispatch(
       updateProduct({
         _id: productId,
@@ -116,6 +115,7 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setName(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Form.Group controlId="price">
               <Form.Label>Price</Form.Label>
               <Form.Control
@@ -125,6 +125,7 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setPrice(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Form.Group controlId="image">
               <Form.Label>Image</Form.Label>
               <Form.Control
@@ -141,6 +142,7 @@ const ProductEditScreen = ({ match, history }) => {
               ></Form.File>
               {uploading && <Loader />}
             </Form.Group>
+
             <Form.Group controlId="brand">
               <Form.Label>Brand</Form.Label>
               <Form.Control
@@ -150,6 +152,7 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setBrand(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Form.Group controlId="countInStock">
               <Form.Label>Count In Stock</Form.Label>
               <Form.Control
@@ -159,6 +162,7 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setCountInStock(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
               <Form.Control
@@ -168,6 +172,7 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setCategory(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
               <Form.Control
@@ -177,8 +182,17 @@ const ProductEditScreen = ({ match, history }) => {
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>
             </Form.Group>
+
             <Button type="submit" variant="primary">
               Update
+            </Button>
+
+            <Button type="button" variant="light" className="ml-3" style={{ border: '1px solid #1a1a1a' }}>
+              <Link
+                to="/admin/productslist"
+              >
+                Cancel
+              </Link>
             </Button>
           </Form>
         )}
