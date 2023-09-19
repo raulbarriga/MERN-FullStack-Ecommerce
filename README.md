@@ -15,3 +15,4 @@ REACT_APP_BASE_PRODUCTION_SERVER_URL // if you do use render.com to deploy the p
 /* Todo: */
  add in the cloudinary functionality first since render.com will not display images after some time & won't allow to upload, as comments said in the udemy course q & a.
 ## To 
+"build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
