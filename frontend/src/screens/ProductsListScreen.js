@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from 'react-toastify';
+
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Paginate from "../components/Paginate";
@@ -19,6 +21,12 @@ const ProductsListScreen = ({ history, match }) => {
   const productsList = useSelector((state) => state.productsList);
   const { loading, error, products, pages, page } = productsList;
 
+  const productUpdate = useSelector((state) => state.productUpdate);
+  const {
+    error: errorUpdate,
+    success: successUpdate,
+  } = productUpdate;
+
   const productDelete = useSelector((state) => state.productDelete);
   const {
     loading: loadingDelete,
@@ -28,10 +36,8 @@ const ProductsListScreen = ({ history, match }) => {
 
   const productCreate = useSelector((state) => state.productCreate);
   const {
-    loading: loadingCreate,
     error: errorCreate,
     success: successCreate,
-    product: createdProduct,
   } = productCreate;
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -43,8 +49,15 @@ const ProductsListScreen = ({ history, match }) => {
       history.push("/login");
     }
     if (successCreate) {
-      history.push(`/admin/products/${createdProduct._id}/edit`);
+      toast.success('Product Created'); 
     } else {
+      toast.error(errorCreate);
+      dispatch(listProducts("", pageNumber));
+    }
+    if (successUpdate) {
+      toast.success('Product Updated'); 
+    } else {
+      toast.error(errorUpdate);
       dispatch(listProducts("", pageNumber));
     }
   }, [
@@ -53,18 +66,19 @@ const ProductsListScreen = ({ history, match }) => {
     userInfo,
     successDelete,
     successCreate,
-    createdProduct,
     pageNumber,
   ]);
 
   const deleteHandler = (id) => {
-    if (window.confirm("Are you sure you?")) {
+    if (window.confirm("Are you sure you want to delete?")) {
       dispatch(deleteProduct(id));
+      toast.success('Product Deleted');
     }
   };
 
   const createProductHandler = () => {
-    dispatch(createProduct());
+    localStorage.setItem("pageNumber", pageNumber);
+    history.push("/admin/products"); // route to add product using a POST request
   };
 
   return (
@@ -74,6 +88,7 @@ const ProductsListScreen = ({ history, match }) => {
           <h1>Products</h1>
         </Col>
         <Col className="text-right">
+          {/* createProductHandler sends me to the new ProductAddScreen (it'll look the same as the ProductEditScreen) */}
           <Button className="my-3" onClick={createProductHandler}>
             <i className="fas fa-plus"></i> Create Product
           </Button>
@@ -81,7 +96,6 @@ const ProductsListScreen = ({ history, match }) => {
       </Row>
       {loadingDelete && <Loader />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
-      {loadingCreate && <Loader />}
       {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {loading ? (
         <Loader />

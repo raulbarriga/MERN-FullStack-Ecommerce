@@ -1,6 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomeScreen from "./screens/HomeScreen";
@@ -17,11 +20,13 @@ import UsersListScreen from "./screens/UsersListScreen";
 import UserEditScreen from "./screens/UserEditScreen";
 import ProductsListScreen from "./screens/ProductsListScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
+import ProductAddScreen from "./screens/ProductAddScreen";
 import OrdersListScreen from "./screens/OrdersListScreen";
 
 const App = () => {
   return (
     <Router>
+      <ToastContainer />
       <Header />
       <main className="py-3">
         <Container>
@@ -49,6 +54,11 @@ const App = () => {
             exact
           />
           <Route path="/admin/orderslist" component={OrdersListScreen} />
+          {/* Route to add a new product */}
+          <Route
+            path="/admin/products/:pageNumber"
+            component={ProductAddScreen}
+          />
           <Route
             path="/admin/products/:id/edit"
             component={ProductEditScreen}

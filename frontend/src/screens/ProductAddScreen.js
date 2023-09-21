@@ -3,15 +3,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-
-import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-import { listProductDetails, updateProduct } from "../actions/productActions";
-import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
+import { createProduct } from "../actions/productActions";
+import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 
-const ProductEditScreen = ({ match, history }) => {
-  const productId = match.params.id;
+const ProductAddScreen = ({ history }) => {
+  const pageNumber = localStorage.getItem("pageNumber") || 1;
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
@@ -24,34 +22,35 @@ const ProductEditScreen = ({ match, history }) => {
 
   const dispatch = useDispatch();
 
-  const productDetails = useSelector((state) => state.productDetails);
-  const { loading, error, product } = productDetails;
-
-  const productUpdate = useSelector((state) => state.productUpdate);
+  const productCreate = useSelector((state) => state.productCreate);
   const {
-    loading: loadingUpdate,
-    error: errorUpdate,
-    success: successUpdate,
-  } = productUpdate;
+    loading: loadingCreate,
+    success: successCreate,
+  } = productCreate;
 
-  useEffect(() => { // left off here (question on the Message component being needed in the add product screen)
-    if (successUpdate) {
-      dispatch({ type: PRODUCT_UPDATE_RESET });
+  useEffect(() => {
+    // first checks if we're logged in & an admin
+    if (!userInfo || !userInfo.isAdmin) {
+      history.push("/login");
+    }
+    // triggered when we dispatch to create the product
+    if (successCreate) {
+      // reset the form when we submit the create product form
+      dispatch({ type: PRODUCT_CREATE_RESET });
+      // show a message saying product was created in the ProductsListScreen
       history.push("/admin/productslist");
     } else {
-      if (!product.name || product._id !== productId) {
-        dispatch(listProductDetails(productId));
-      } else {
-        setName(product.name);
-        setPrice(product.price);
-        setImage(product.image);
-        setBrand(product.brand);
-        setCategory(product.category);
-        setCountInStock(product.countInStock);
-        setDescription(product.description);
-      }
+      dispatch(listProducts("", pageNumber));
+      // displays an error message of product not created at the top of the ProductsListScreen
+      history.push("/admin/productslist");
     }
-  }, [dispatch, history, productId, product, successUpdate]);
+  }, [
+    dispatch,
+    history,
+    userInfo,
+    successCreate,
+    pageNumber,
+  ]);
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
@@ -78,18 +77,7 @@ const ProductEditScreen = ({ match, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(
-      updateProduct({
-        _id: productId,
-        name,
-        price,
-        image,
-        brand,
-        category,
-        description,
-        countInStock,
-      })
-    );
+    dispatch(createProduct());
   };
 
   return (
@@ -98,13 +86,9 @@ const ProductEditScreen = ({ match, history }) => {
         Go Back
       </Link>
       <FormContainer>
-        <h1>Edit Product</h1>
-        {loadingUpdate && <Loader />}
-        {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
-        {loading ? (
+        <h1>Create Product</h1>
+        {loadingCreate ? (
           <Loader />
-        ) : error ? (
-          <Message variant="danger">{error}</Message>
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name">
@@ -143,7 +127,7 @@ const ProductEditScreen = ({ match, history }) => {
               ></Form.File>
               {uploading && <Loader />}
             </Form.Group>
-
+            {/* todo: add feature to upload more than one image */}
             <Form.Group controlId="brand">
               <Form.Label>Brand</Form.Label>
               <Form.Control
@@ -185,15 +169,16 @@ const ProductEditScreen = ({ match, history }) => {
             </Form.Group>
 
             <Button type="submit" variant="primary">
-              Update
+              Create Product
             </Button>
 
-            <Button type="button" variant="light" className="ml-3" style={{ border: '1px solid #1a1a1a' }}>
-              <Link
-                to="/admin/productslist"
-              >
-                Cancel
-              </Link>
+            <Button
+              type="button"
+              variant="light"
+              className="ml-3"
+              style={{ border: "1px solid #1a1a1a" }}
+            >
+              <Link to="/admin/productslist">Cancel</Link>
             </Button>
           </Form>
         )}
@@ -202,4 +187,4 @@ const ProductEditScreen = ({ match, history }) => {
   );
 };
 
-export default ProductEditScreen;
+export default ProductAddScreen;
